@@ -25,10 +25,6 @@ public class WebApiRepository : IWebApiRepository
 
     public async Task<List<CategoriesDMO>> GetCategories()
     {
-        // var request = new RestRequest("products/category", Method.Get);
-        // var response = await client.GetAsync(request);
-        // CategoriesDMO result = JsonConvert.DeserializeObject<CategoriesDMO>(response.Content);
-        // return result; 
 
         var response =  await _ayStoreContext.Category.Select(s => new CategoriesDMO
         {

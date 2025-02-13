@@ -11,6 +11,7 @@ public class MappingHelper : Profile
         //ProductDetail
         CreateMap<ProductDetailDMO,ProductDetailDTO>().ReverseMap(); 
         CreateMap<ProductDetailDTO,ProductDetailViewModel>().ReverseMap();
+        
 
         //Categories 
         CreateMap<CategoriesDMO,CategoriesDTO>().ReverseMap(); 

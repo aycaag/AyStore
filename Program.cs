@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +15,21 @@ builder.Services.AddDbContext<AyStoreContext>(option =>
 //AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingHelper).Assembly);
 
+// Uygulamada Session kullanmak istediğimiz için, sessiojn ayarlarını program.cs dosyasında yapıyoruz
+builder.Services.AddSession(option =>
+{
+
+    option.IdleTimeout = TimeSpan.FromMinutes(30); // session'ın süresini belirledik!!
+    
+});
+
+builder.Services.AddHttpContextAccessor();
 // Bağımlılıklar ; 
 builder.Services.AddScoped<IWebApiRepository,WebApiRepository>();
 builder.Services.AddScoped<IMapper,Mapper>();
 builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<ICategoriesService,CategoriesService>();
+builder.Services.AddScoped<IShopCartService,ShopCartService>();
 
 
 
@@ -32,7 +43,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseStaticFiles();
