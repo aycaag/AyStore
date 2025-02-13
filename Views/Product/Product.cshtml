@@ -1,0 +1,10 @@
+@model ProductViewModel
+
+    @Html.Partial("_pageHeaderPartial")
+    
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            @Html.Partial("_shopSideBarPartial")
+            @Html.Partial("_shopProductPartial",Model.products)
+        </div>
+    </div>
