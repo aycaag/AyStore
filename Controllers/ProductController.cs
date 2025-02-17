@@ -10,9 +10,10 @@ public class ProductController: BaseController
         (
             ICategoriesService categoriesService,
             IMapper mapper,
-            IProductService productService
+            IProductService productService,
+            IShopCartService shopCartService
         )
-        :base(categoriesService,mapper)
+        :base(categoriesService,mapper,shopCartService)
     {
        _productService = productService;
     }

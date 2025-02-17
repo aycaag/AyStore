@@ -16,8 +16,9 @@ public class HomeController : BaseController
     public HomeController(
         IMapper mapper,
         IProductService productService,
-        ICategoriesService categoriesService)
-        :base(categoriesService,mapper)
+        ICategoriesService categoriesService,
+        IShopCartService shopCartService)
+        :base(categoriesService,mapper,shopCartService)
     {
         _productService = productService;
         // _mapper = mapper;

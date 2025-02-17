@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 public class ShopCartController : BaseController
 {
-    private readonly IShopCartService _shopCartService;
+    //private readonly IShopCartService _shopCartService;
     private readonly IProductService _productService;
 
     public ShopCartController(
@@ -16,9 +16,8 @@ public class ShopCartController : BaseController
         IShopCartService shopCartService,
         IProductService productService
         )
-        : base(categoriesService, mapper)
+        : base(categoriesService, mapper,shopCartService)
     {
-        _shopCartService = shopCartService;
         _productService = productService;
     }
 
