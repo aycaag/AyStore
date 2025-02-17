@@ -52,4 +52,25 @@ public class ShopCartController : BaseController
         _shopCartService.AddToCart(item);
         return RedirectToAction("Index","Home");
     }
+
+    public async Task<IActionResult> RemoveFromCart (int productId)
+    {
+
+        _shopCartService.RemoveFromCart(productId);
+
+        return RedirectToAction("ShopCart");
+    }
+
+    public async Task<IActionResult> DecreaseQuantityOfProduct (int productId  )
+    {
+
+        _shopCartService.DecreaseQuantityOfProduct(productId);
+        return RedirectToAction("ShopCart");
+    }
+
+    public async Task<ActionResult> IncreaseQuantityOfProduct (int productId)
+    {
+        _shopCartService.IncreaseQuantityOfProduct(productId);
+        return RedirectToAction("ShopCart");
+    }
 }
