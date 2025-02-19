@@ -18,7 +18,7 @@ public class ProductController: BaseController
        _productService = productService;
     }
 
-    public async Task<ActionResult> Product()
+    public async Task<ActionResult> Index()
     {
         ViewData["ActivePage"] = "Product";
 

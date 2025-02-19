@@ -21,7 +21,7 @@ public class ShopCartController : BaseController
         _productService = productService;
     }
 
-    public ActionResult ShopCart()
+    public ActionResult Index()
     {
         ViewData["ActivePage"] = "ShopCart";
 
