@@ -20,6 +20,8 @@ public class ProductController: BaseController
 
     public async Task<ActionResult> Product()
     {
+        ViewData["ActivePage"] = "Product";
+
         ProductViewModel model = new ProductViewModel();
         //Product
         var products = await _productService.GetAllProducts();

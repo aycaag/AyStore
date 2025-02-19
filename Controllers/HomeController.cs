@@ -27,6 +27,8 @@ public class HomeController : BaseController
 
     public async Task<IActionResult> Index()
     {
+        ViewData["ActivePage"] = "Home";
+        
         IndexViewModel model = new IndexViewModel();
 
         //Product

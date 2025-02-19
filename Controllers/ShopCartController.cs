@@ -23,6 +23,8 @@ public class ShopCartController : BaseController
 
     public ActionResult ShopCart()
     {
+        ViewData["ActivePage"] = "ShopCart";
+
         ShopCartViewModel model= new ShopCartViewModel();
 
         Cart cart = _shopCartService.GetCart();
@@ -33,7 +35,7 @@ public class ShopCartController : BaseController
         return View(model);
     }
 
-     public async Task<IActionResult> AddToCart(int productId)
+     public async Task<IActionResult> AddToCart(int productId,string returnUrl)
     //  (int productId,string productBrand ,string productModel, decimal price, decimal previousPrice,int quantity)
     {
 
@@ -50,7 +52,8 @@ public class ShopCartController : BaseController
         };
 
         _shopCartService.AddToCart(item);
-        return RedirectToAction("Index","Home");
+        //return RedirectToAction("Index","Home");
+        return Json(new { success = true, message = "Ürün sepete eklendi!", totalItems = _shopCartService.GetCart().CartItems.Count , returnUrl = returnUrl });
     }
 
     public async Task<IActionResult> RemoveFromCart (int productId)
