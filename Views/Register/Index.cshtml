@@ -63,22 +63,22 @@
             </div>
             <div class="col-md-6 form-group">
                 <label>Ülke</label>
-                <select class="custom-select">
+                <select asp-for="Address.Country" class="custom-select">
                     <option selected>Türkiye</option>
                     <option >Almanya</option>
                 </select>
             </div>
             <div class="col-md-6 form-group">
                 <label>Şehir</label>
-                <input name="City" class="form-control" type="text" >
+                <input asp-for="Address.City" class="form-control" type="text" >
             </div>
             <div class="col-md-6 form-group">
                 <label>Mahalle</label>
-                <input name="State" class="form-control" type="text" >
+                <input asp-for="Address.State" class="form-control" type="text" >
             </div>
             <div class="col-md-6 form-group">
                 <label>Posta Kodu</label>
-                <input name="Code" class="form-control" type="text" >
+                <input asp-for="Address.Code" class="form-control" type="text" >
             </div>
             <div class="col-md-12 form-group">
                 <div class="custom-control custom-checkbox">

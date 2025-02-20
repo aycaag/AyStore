@@ -29,7 +29,6 @@ public class WebContextRepository : IWebContextRepository
             LastName = registerDMOs.User.LastName,
             PhoneNumber = registerDMOs.User.PhoneNumber,
         });
-        _ayStoreContext.SaveChanges();
 
         _ayStoreContext.Login.AddRange(new Login{
             UserId = nowUserID,
@@ -37,7 +36,6 @@ public class WebContextRepository : IWebContextRepository
             Password = registerDMOs.Login.Password,
             ConfirmPassword = registerDMOs.Login.ConfirmPassword,
         });
-        await _ayStoreContext.SaveChangesAsync();
 
         _ayStoreContext.Addresses.AddRange(new Address{
             UserId = nowUserID,
@@ -49,6 +47,7 @@ public class WebContextRepository : IWebContextRepository
             Code = registerDMOs.Address.Code,
 
         });
+        
         await _ayStoreContext.SaveChangesAsync();
 
         return registerDMOs;

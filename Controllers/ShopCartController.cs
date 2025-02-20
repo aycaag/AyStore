@@ -61,19 +61,19 @@ public class ShopCartController : BaseController
 
         _shopCartService.RemoveFromCart(productId);
 
-        return RedirectToAction("ShopCart");
+        return RedirectToAction("Index");
     }
 
     public async Task<IActionResult> DecreaseQuantityOfProduct (int productId  )
     {
 
         _shopCartService.DecreaseQuantityOfProduct(productId);
-        return RedirectToAction("ShopCart");
+        return RedirectToAction("Index");
     }
 
     public async Task<ActionResult> IncreaseQuantityOfProduct (int productId)
     {
         _shopCartService.IncreaseQuantityOfProduct(productId);
-        return RedirectToAction("ShopCart");
+        return RedirectToAction("Index");
     }
 }
