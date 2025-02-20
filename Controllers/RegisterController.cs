@@ -37,7 +37,7 @@ public class RegisterController : BaseController
 
              // Kayıt başarılıysa, TempData'ya mesaj ekleyin
             TempData["Success"] = "Kayıt işlemi başarılı şekilde gerçekleşti!";
-            return View("Index"); 
+            return RedirectToAction("Index","Login"); 
 
         }
         catch (Exception ex)
