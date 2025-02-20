@@ -38,8 +38,8 @@
                             <a href="contact.html" class="nav-item nav-link">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
-                            <a href="" class="nav-item nav-link">Login</a>
-                            <a href="" class="nav-item nav-link">Register</a>
+                            <a  asp-controller="Login" asp-action="Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Login" ? "active" : "") ">Login</a>
+                            <a  asp-controller="Register" asp-action="Index"  class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Register" ? "active" : "") ">Üye Ol</a>
                         </div>
                     </div>
                 </nav>

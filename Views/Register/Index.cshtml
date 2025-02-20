@@ -1,0 +1,81 @@
+@model RegisterViewModel
+
+<form action="/Register/Index" method="post">
+    <div class="mb-4" style="margin-top:50px">
+        
+        <div class="text-center mb-4">
+          <h3 class="section-title px-5"><span class="px-2"> Üyelik Oluştur </span></h3>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label>Ad</label>
+                <input asp-for="User.Name" class="form-control" type="text" >
+                <span asp-validation-for="User.Name" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label>Soyad</label>
+                <input asp-for="User.LastName" class="form-control" type="text" >
+                <span asp-validation-for="User.LastName" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label>E-mail</label>
+                <input asp-for="Login.Email" class="form-control" type="text" >
+                <span asp-validation-for="Login.Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label>Telefon No</label>
+                <input asp-for="User.PhoneNumber" class="form-control" type="text" >
+                <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label>Şifre</label>
+                <input asp-for="Login.Password" class="form-control" type="password" >
+                <span asp-validation-for="Login.Password" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label>Şifre Doğrulama</label>
+                <input asp-for="Login.ConfirmPassword" class="form-control" type="password" >
+                <span asp-validation-for="Login.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label>Adres </label>
+                <input asp-for="Address.AddressOne" class="form-control" type="text" >
+                <span asp-validation-for="Address.AddressOne" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label>Adres 2 </label>
+                <input asp-for="Address.AddressTwo" class="form-control" type="text" >
+            </div>
+            <div class="col-md-6 form-group">
+                <label>Ülke</label>
+                <select class="custom-select">
+                    <option selected>Türkiye</option>
+                    <option >Almanya</option>
+                </select>
+            </div>
+            <div class="col-md-6 form-group">
+                <label>Şehir</label>
+                <input name="City" class="form-control" type="text" >
+            </div>
+            <div class="col-md-6 form-group">
+                <label>Mahalle</label>
+                <input name="State" class="form-control" type="text" >
+            </div>
+            <div class="col-md-6 form-group">
+                <label>Posta Kodu</label>
+                <input name="Code" class="form-control" type="text" >
+            </div>
+            <div class="col-md-12 form-group">
+                <div class="custom-control custom-checkbox">
+                    <input asp-for="ConfirmAccount" type="checkbox" class="custom-control-input" id="newaccount">
+                    <label class="custom-control-label" for="newaccount"> Üyelik oluşturmayı kabul ediyorum</label>
+                    <span asp-validation-for="ConfirmAccount" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <button class="btn btn-block btn-primary my-3 py-3"> Üyelik Oluştur</button>
+</form>
