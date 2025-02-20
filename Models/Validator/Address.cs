@@ -1,6 +1,13 @@
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 public class Address
 {
+    [Key]
+    public int? ID { get; set; }
+
+    [ForeignKey("User")]
     public int? UserId {get;set;} 
     public string? AddressOne { get; set;} 
 

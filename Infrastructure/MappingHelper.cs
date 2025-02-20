@@ -16,6 +16,10 @@ public class MappingHelper : Profile
         //Categories 
         CreateMap<CategoriesDMO,CategoriesDTO>().ReverseMap(); 
         CreateMap<CategoriesDTO,CategoryViewModel>().ReverseMap(); 
+
+        // Registers
+        CreateMap<RegisterDMO,RegisterDTO>().ReverseMap();
+        CreateMap<RegisterDTO,RegisterViewModel>().ReverseMap();
     }
 
    

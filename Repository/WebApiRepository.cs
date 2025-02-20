@@ -1,13 +1,11 @@
 using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+
 using Newtonsoft.Json;
 using RestSharp;
 
 public interface IWebApiRepository
 {
     public  Task<ProductsDMO> GetAllProducts();
-
-    public Task<List<CategoriesDMO>> GetCategories(); 
 
     public Task<ProductDetailDMO> GetProductDetail(int id);   
 }
@@ -16,27 +14,10 @@ public class WebApiRepository : IWebApiRepository
     RestClientOptions options = new RestClientOptions("https://fakestoreapi.in/api/");
     RestClient client;
 
-    private readonly AyStoreContext _ayStoreContext;
-    public WebApiRepository(AyStoreContext ayStoreContext)
+    // private readonly AyStoreContext _ayStoreContext;
+    public WebApiRepository()
     {
-        _ayStoreContext = ayStoreContext;
         client = new RestClient(options);
-    }
-
-    public async Task<List<CategoriesDMO>> GetCategories()
-    {
-
-        var response =  await _ayStoreContext.Category.Select(s => new CategoriesDMO
-        {
-            Id = s.Id,
-            Name = s.Name,
-            Image = s.Image,
-
-
-        }).ToListAsync();
-
-        return response;
-
     }
 
     public async Task<ProductsDMO> GetAllProducts()

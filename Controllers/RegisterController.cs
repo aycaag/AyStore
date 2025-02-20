@@ -4,13 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 
 public class RegisterController : BaseController
 {
+    private readonly IRegisterService _registerService;
     public RegisterController(
         ICategoriesService categoriesService,
         IMapper mapper,
-        IShopCartService shopCartService)
+        IShopCartService shopCartService,
+        IRegisterService registerService)
         : base(categoriesService, mapper, shopCartService)
-    {
-
+    {   
+        _registerService = registerService;
     }
 
     public async Task<IActionResult> Index()
@@ -24,20 +26,28 @@ public class RegisterController : BaseController
     [HttpPost]
     public async Task<IActionResult> Index(RegisterViewModel model)
     {
-        try
-        {
-            if (!ModelState.IsValid)
+         if (!ModelState.IsValid)
             {
                 return View(model); // Hataları göstererek sayfayı tekrar yükler
             }
+        try
+        {
+            RegisterDTO registerdto = _mapper.Map<RegisterDTO>(model);
+            await _registerService.Add(registerdto);
+
+             // Kayıt başarılıysa, TempData'ya mesaj ekleyin
+            TempData["Success"] = "Kayıt işlemi başarılı şekilde gerçekleşti!";
+            return View("Index"); 
+
         }
         catch (Exception ex)
         {
             // Hata mesajını TempData'ya ekle
-            TempData["Error"] = ex.Message;
-            return RedirectToAction("Index", "Register");
+            TempData["Error"] = "Kayıt işlemi başarılı değil ! Tekrar deneyiniz";
+            Console.WriteLine("Hata: {0}", ex.Message);
+            return RedirectToAction("Index", "Home");
         }
-    return View(model); 
+  
 
 
 

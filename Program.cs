@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // builder.Services.AddControllersWithViews();
+
+// Otomatik gelen validaiton'lar kaldırılması için eklenmiştir.
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
@@ -39,9 +41,11 @@ builder.Services.AddSession(option =>
 builder.Services.AddHttpContextAccessor();
 // Bağımlılıklar ; 
 builder.Services.AddScoped<IWebApiRepository,WebApiRepository>();
+builder.Services.AddScoped<IWebContextRepository,WebContextRepository>();
 builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<ICategoriesService,CategoriesService>();
 builder.Services.AddScoped<IShopCartService,ShopCartService>();
+builder.Services.AddScoped<IRegisterService,RegisterService>();
 
 
 
