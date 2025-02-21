@@ -5,14 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 public class RegisterController : BaseController
 {
     private readonly IRegisterService _registerService;
+    private readonly IPasswordHelper _passwordHelper;   
     public RegisterController(
         ICategoriesService categoriesService,
         IMapper mapper,
         IShopCartService shopCartService,
-        IRegisterService registerService)
+        IRegisterService registerService,
+        IPasswordHelper passwordHelper)
         : base(categoriesService, mapper, shopCartService)
     {   
         _registerService = registerService;
+        _passwordHelper = passwordHelper;
     }
 
     public async Task<IActionResult> Index()
@@ -32,6 +35,13 @@ public class RegisterController : BaseController
             }
         try
         {
+
+            string hashedPassword = _passwordHelper.HashPassword(model.Login.Password); 
+            string hashedConfirmPassword = _passwordHelper.HashPassword(model.Login.ConfirmPassword); 
+
+            model.Login.Password = hashedPassword;
+            model.Login.ConfirmPassword = hashedConfirmPassword;    
+
             RegisterDTO registerdto = _mapper.Map<RegisterDTO>(model);
             await _registerService.Add(registerdto);
 
