@@ -53,9 +53,9 @@ public class RegisterController : BaseController
         catch (Exception ex)
         {
             // Hata mesajını TempData'ya ekle
-            TempData["Error"] = "Kayıt işlemi başarılı değil ! Tekrar deneyiniz";
+            TempData["Error"] = ex.Message!=null ? ex.Message: "Kayıt işlemi başarılı değil ! Tekrar deneyiniz";
             Console.WriteLine("Hata: {0}", ex.Message);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index");
         }
   
 

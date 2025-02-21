@@ -21,8 +21,6 @@ public class RegisterService : IRegisterService
 
         await _webcontextRepository.AddRegister(registerdmo);
 
-        
-
         return registerDTOs;
     }
 }

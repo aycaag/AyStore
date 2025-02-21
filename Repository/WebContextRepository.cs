@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 public interface IWebContextRepository
@@ -22,22 +24,34 @@ public class WebContextRepository : IWebContextRepository
         int lastUserID = _ayStoreContext.Login.Max(x => (int?)x.UserId) ?? 0;
         int nowUserID = lastUserID + 1;
 
+        bool emailExists = _ayStoreContext.Login.Any(x => x.Email == registerDMOs.Login.Email);
 
-        _ayStoreContext.Users.AddRange(new User {
+        if (emailExists)
+        {
+            throw new Exception("Bu e-posta adresi zaten sistemde mevcut !! ");
+            
+        }
+
+
+
+        _ayStoreContext.Users.AddRange(new User
+        {
             Id = nowUserID,
             Name = registerDMOs.User.Name,
             LastName = registerDMOs.User.LastName,
             PhoneNumber = registerDMOs.User.PhoneNumber,
         });
 
-        _ayStoreContext.Login.AddRange(new Login{
+        _ayStoreContext.Login.AddRange(new Login
+        {
             UserId = nowUserID,
             Email = registerDMOs.Login.Email,
             Password = registerDMOs.Login.Password,
             ConfirmPassword = registerDMOs.Login.ConfirmPassword,
         });
 
-        _ayStoreContext.Addresses.AddRange(new Address{
+        _ayStoreContext.Addresses.AddRange(new Address
+        {
             UserId = nowUserID,
             AddressOne = registerDMOs.Address.AddressOne,
             AddressTwo = registerDMOs.Address.AddressTwo,
@@ -47,7 +61,7 @@ public class WebContextRepository : IWebContextRepository
             Code = registerDMOs.Address.Code,
 
         });
-        
+
         await _ayStoreContext.SaveChangesAsync();
 
         return registerDMOs;
@@ -68,6 +82,8 @@ public class WebContextRepository : IWebContextRepository
         return response;
 
     }
+
+
 
 
 }
