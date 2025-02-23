@@ -47,6 +47,7 @@ builder.Services.AddScoped<ICategoriesService,CategoriesService>();
 builder.Services.AddScoped<IShopCartService,ShopCartService>();
 builder.Services.AddScoped<IRegisterService,RegisterService>();
 builder.Services.AddScoped<IPasswordHelper,PasswordHelper>();
+builder.Services.AddScoped<ILoginService,LoginService>();
 
 
 

@@ -7,6 +7,8 @@ public interface IWebContextRepository
     public Task<List<CategoriesDMO>> GetCategories();
 
     public Task<RegisterDMO> AddRegister(RegisterDMO registerDMOs);
+
+    public bool SignIn (string email, string password);
 }
 
 public class WebContextRepository : IWebContextRepository
@@ -31,7 +33,6 @@ public class WebContextRepository : IWebContextRepository
             throw new Exception("Bu e-posta adresi zaten sistemde mevcut !! ");
             
         }
-
 
 
         _ayStoreContext.Users.AddRange(new User
@@ -83,7 +84,17 @@ public class WebContextRepository : IWebContextRepository
 
     }
 
+    public bool SignIn(string email, string password)
+    {
+        
+        bool userControl = _ayStoreContext.Login.Any(x => x.Email == email && x.Password == password);
 
+        if (!userControl)
+        {
+            throw new Exception("Email ya da şifre hatalı ! ");
+        }
 
-
+        return userControl  ;
+              
+    }
 }
