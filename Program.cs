@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using FluentValidation.AspNetCore;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +25,31 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 builder.Services.AddControllersWithViews()
 .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<RegisterModelValidator>());
 
+
+//JWT Bearer
+var JwtSettings = builder.Configuration.GetSection("JwtSettings");
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+}).AddJwtBearer(option =>
+{
+
+    option.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = JwtSettings["Issuer"],
+        ValidAudience = JwtSettings["Audience"],
+        ClockSkew = TimeSpan.Zero , // token süresi kesin olarak dolması için eklenmiştir.
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSettings["Key"]))
+    };
+
+
+});
 
 //Context
 builder.Services.AddDbContext<AyStoreContext>(option =>
@@ -65,9 +93,9 @@ app.UseSession();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseStaticFiles();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapStaticAssets();
-
 
 app.MapControllerRoute(
     name: "default",

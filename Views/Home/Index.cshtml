@@ -1,6 +1,21 @@
 ﻿
 @model IndexViewModel
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+
 
 @Html.Partial("_featuredPartial")
 @Html.Partial("_categoriesPartial",Model.CategoryVM)

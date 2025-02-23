@@ -1,23 +1,30 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 public class LoginController : BaseController
 {
     private readonly ILoginService _loginService;
     private readonly IPasswordHelper _passwordHelper;
+    private readonly IConfiguration _configuration;
     public LoginController(
         ICategoriesService categoriesService,
         IMapper mapper,
         IShopCartService shopCartService,
         ILoginService loginService,
-        IPasswordHelper passwordHelper)
+        IPasswordHelper passwordHelper,
+        IConfiguration configuration)
         : base(categoriesService, mapper, shopCartService)
     {
         _loginService = loginService;
         _passwordHelper = passwordHelper;
+        _configuration = configuration;
     }
 
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
 
         ViewData["ActivePage"] = "Login";
@@ -26,7 +33,7 @@ public class LoginController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Index(LoginViewModel model)
+    public IActionResult Index(LoginViewModel model)
     {
         string hashedPassword = _passwordHelper.HashPassword(model.Password);
 
@@ -40,9 +47,19 @@ public class LoginController : BaseController
             bool userControl = _loginService.SignIn(model.Email, hashedPassword);
             if (userControl)
             {
+                // JWT Token oluşturma 
+                var token = GenerateJwtToken(model.Email);
+                // Token'ı session ile oturumda sakla
+                HttpContext.Session.SetString("JWTToken", token);
+                // Mesajı ekrana gönder 
                 TempData["Success"] = "Giriş işlemi başarılı şekilde gerçekleşti!";
+
+                // Anasayfayı aç
+                return RedirectToAction("Index", "Home");
+
             }
-            return RedirectToAction("Index");
+
+            return View(model);
 
         }
         catch (Exception ex)
@@ -53,6 +70,30 @@ public class LoginController : BaseController
             return View(model);
         }
 
+    }
+
+
+    private string GenerateJwtToken(string username)
+    {
+        var JwtSettings = _configuration.GetSection("JwtSettings");
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSettings["Key"]));
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
+        {
+        new Claim(ClaimTypes.Name, username),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+    };
+
+        var token = new JwtSecurityToken(
+            issuer: JwtSettings["Issuer"],
+            audience: JwtSettings["Audience"],
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(30),
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
 
