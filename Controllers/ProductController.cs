@@ -34,7 +34,12 @@ public class ProductController : BaseController
         List<PriceFiltersDTO> priceListDTOs = await _filterService.GetPriceFilters();
         List<PriceFilters> priceList = _mapper.Map<List<PriceFilters>>(priceListDTOs);
         model.filters.Price = priceList;
-        
+
+        // Filtre alanındaki color verisini çekelim ;
+
+        ColorsFilters colorsFilters = await _filterService.GetProductColorsAsync();
+        model.filters.Colors = colorsFilters.Colors; 
+
         return View(model);
     }
 
@@ -50,27 +55,27 @@ public class ProductController : BaseController
         return View(model);
     }
 
-    [HttpGet]
-    public async Task<ActionResult> ProductbyCategory(string categoryName)
-    {
-        if (categoryName == null || categoryName == "all")
-        {
-            return RedirectToAction("Index");
-        }
-        ViewData["ActivePage"] = "Product";
-        ViewData["ActiveCategory"] = categoryName;
+    // [HttpGet]
+    // public async Task<ActionResult> ProductbyCategory(string categoryName)
+    // {
+    //     if (categoryName == null || categoryName == "all")
+    //     {
+    //         return RedirectToAction("Index");
+    //     }
+    //     ViewData["ActivePage"] = "Product";
+    //     ViewData["ActiveCategory"] = categoryName;
 
-        categoryName = categoryName.ToLower().Replace("ı", "i");
+    //     categoryName = categoryName.ToLower().Replace("ı", "i");
 
-        ProductViewModel model = new ProductViewModel();
+    //     ProductViewModel model = new ProductViewModel();
 
-        var productsbyCategory = await _productService.GetAllProductbyCategory(categoryName);
-        var productViewModel = _mapper.Map<ProductViewModel>(productsbyCategory);
-        model.products = productViewModel.products;
+    //     var productsbyCategory = await _productService.GetAllProductbyCategory(categoryName);
+    //     var productViewModel = _mapper.Map<ProductViewModel>(productsbyCategory);
+    //     model.products = productViewModel.products;
 
-        return View("Index", productViewModel);
+    //     return View("Index", productViewModel);
 
-    }
+    // }
 
 
     [HttpPost]
@@ -79,7 +84,7 @@ public class ProductController : BaseController
         
         string categoryName = filters.CategoryName ?? "all";
         string price = filters.PriceName  ?? "all";
-        string color = filters.Colors ?? "all";
+        string color = filters.ColorName ?? "all";
 
 
         // hiç filtreleme yapılmadıysa 
@@ -103,6 +108,10 @@ public class ProductController : BaseController
         List<PriceFiltersDTO> priceListDTOs = await _filterService.GetPriceFilters();
         List<PriceFilters> priceList = _mapper.Map<List<PriceFilters>>(priceListDTOs);
         model.filters.Price = priceList;
+
+        // Color alanındaki color verisini çekelim ;
+        ColorsFilters colorsFilters = await _filterService.GetProductColorsAsync();
+        model.filters.Colors = colorsFilters.Colors; 
         
 
         ProductsDTO product;
@@ -120,8 +129,7 @@ public class ProductController : BaseController
         //2. filtre
         if(price != "all")
         {            
-
-           ViewData["ActivePriceFilter"] = filters.PriceName;
+           ViewData["ActivePriceFilter"] = price;
            int minPrice = Convert.ToInt32(priceList.Where(x=>x.Name == filters.PriceName).Select(s=>s.MinPrice).FirstOrDefault()) ;
            int maxPrice = Convert.ToInt32(priceList.Where(x=>x.Name == filters.PriceName).Select(s=>s.MaxPrice).FirstOrDefault()) ;
            product.products = product.products.Where(s=>s.price >= minPrice && s.price<=maxPrice).ToList();        
@@ -129,9 +137,18 @@ public class ProductController : BaseController
 
         //3.filtre
 
+        if (color != "all")
+        {
+            ViewData["ActiveColorFilter"] = color;  
+            color = color.ToLower();
+            product.products = product.products.Where(s=> s.color== color).ToList();
+            
+        }
+
         productViewModel = _mapper.Map<ProductViewModel>(product);
         model.products = productViewModel.products;
         model.filters.Price = priceList;
+        model.filters.Colors = colorsFilters.Colors; 
 
         return View("Index", model);
 

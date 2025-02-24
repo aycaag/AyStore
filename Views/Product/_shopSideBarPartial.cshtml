@@ -48,31 +48,20 @@
         <div class="border-bottom mb-4 pb-4">
             <h5 class="font-weight-semi-bold mb-4">Renge göre filtrele</h5>
 
-            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" checked id="color-all">
-                <label class="custom-control-label" for="price-all">Hepsi</label>
+            <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                <input type="radio" class="custom-control-input" checked id="color-all" value="all" name="filters.ColorName">
+                <label class="custom-control-label" for="color-all">Hepsi</label>
             </div>
-            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" id="color-1">
-                <label class="custom-control-label" for="color-1">Black</label>
+            @foreach(var item in Model.Colors)
+            {
+            <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                <input type="radio" class="custom-control-input" id="color-@item" 
+                        value="@item" name="filters.ColorName"
+                        @(ViewData["ActiveColorFilter"]?.ToString() == @item ? "checked" : "") >
+                <label class="custom-control-label" for="color-@item"> @item </label>
             </div>
-            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" id="color-2">
-                <label class="custom-control-label" for="color-2">White</label>
-            </div>
-            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" id="color-3">
-                <label class="custom-control-label" for="color-3">Red</label>
-            </div>
-            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" id="color-4">
-                <label class="custom-control-label" for="color-4">Blue</label>
-            </div>
-            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                <input type="checkbox" class="custom-control-input" id="color-5">
-                <label class="custom-control-label" for="color-5">Green</label>
-            </div>
-
+            }
+            
         </div>
         <!-- Color End -->
 
