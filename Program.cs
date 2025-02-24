@@ -75,7 +75,8 @@ builder.Services.AddAutoMapper(typeof(MappingHelper).Assembly);
 // Uygulamada Session kullanmak istediğimiz için, sessiojn ayarlarını program.cs dosyasında yapıyoruz
 builder.Services.AddSession(option =>
 {
-    option.IdleTimeout = TimeSpan.FromMinutes(30); // session'ın süresini   
+    option.IdleTimeout = TimeSpan.FromMinutes(30); // session'ın süresini  
+    option.Cookie.HttpOnly = true; 
     option.Cookie.IsEssential = true; // Çerezleri zorunlu yaparak session'ı düzgün çalıştırabilirsiniz
 });
 
@@ -90,6 +91,7 @@ builder.Services.AddScoped<IShopCartService, ShopCartService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<IPasswordHelper, PasswordHelper>();
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IFilterService, FilterService>();
 
 
 

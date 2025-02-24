@@ -1,71 +1,83 @@
-
-            <!-- Shop Sidebar Start -->
-            <div class="col-lg-3 col-md-12">
-                <!-- Price Start -->
-                <div class="border-bottom mb-4 pb-4">
-                    <h5 class="font-weight-semi-bold mb-4">Fiyata göre filtrele</h5>
-                    <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="price-all">
-                            <label class="custom-control-label" for="price-all">Hepsi</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-1">
-                            <label class="custom-control-label" for="price-1">$0 - $100</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-2">
-                            <label class="custom-control-label" for="price-2">$100 - $200</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-3">
-                            <label class="custom-control-label" for="price-3">$200 - $300</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-4">
-                            <label class="custom-control-label" for="price-4">$300 - $400</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="price-5">
-                            <label class="custom-control-label" for="price-5">$400 - $500</label>
-                            
-                        </div>
-                    </form>
-                </div>
-                <!-- Price End -->
-                
-                <!-- Color Start -->
-                <div class="border-bottom mb-4 pb-4">
-                    <h5 class="font-weight-semi-bold mb-4">Renge göre filtrele</h5>
-                    <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="color-all">
-                            <label class="custom-control-label" for="price-all">Hepsi</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-1">
-                            <label class="custom-control-label" for="color-1">Black</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-2">
-                            <label class="custom-control-label" for="color-2">White</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-3">
-                            <label class="custom-control-label" for="color-3">Red</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-4">
-                            <label class="custom-control-label" for="color-4">Blue</label>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="color-5">
-                            <label class="custom-control-label" for="color-5">Green</label>
-                        </div>
-                    </form>
-                </div>
-                <!-- Color End -->
-
+@model Filters
+<!-- Shop Sidebar Start -->
+<div class="col-lg-3 col-md-12">
+    <form method="POST" action="@Url.Action("FilterbyProduct", "Product")">
+        <!-- Category Start -->
+        <div class="border-bottom mb-4 pb-4">
+            <h5 class="font-weight-semi-bold mb-4">Kategoriye göre Filtrele</h5>
+            
+            <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                <input type="radio" class="custom-control-input" checked id="category-all" value="all" name="filters.CategoryName">
+                <label class="custom-control-label" for="category-all">Hepsi</label>
             </div>
-            <!-- Shop Sidebar End -->
+            @foreach(var item in ViewBag.Categories as List<CategoryViewModel>)
+            {
+                <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                    <input type="radio" class="custom-control-input" id="@item.Id-@item.Name" 
+                           value="@item.Name.ToUpper().Replace('ı','i')" name="filters.CategoryName" 
+                           @(ViewData["ActiveCategory"]?.ToString() == @item.Name.ToUpper().Replace('ı','i') ? "checked" : "") />
+                    <label class="custom-control-label" for="@item.Id-@item.Name">@item.Name</label>
+                </div>
+            }
+        </div>
+        <!-- Category End -->
 
+        <!-- Price Start -->
+        <div class="border-bottom mb-4 pb-4">
+            <h5 class="font-weight-semi-bold mb-4">Fiyata göre filtrele</h5>
+
+            <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                <input type="radio" class="custom-control-input" checked id="price-all" value="all" name="filters.PriceName">
+                <label class="custom-control-label" for="price-all">Hepsi</label>
+            </div>
+            @foreach(var item in Model.Price)
+            {
+            <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                <input type="radio" class="custom-control-input" id="@item.Id-@item.Name" 
+                     value="@item.Name" name="filters.PriceName"
+                        @(ViewData["ActivePriceFilter"]?.ToString() == @item.Name ? "checked" : "") />
+                <label class="custom-control-label" for="@item.Id-@item.Name">$@item.Name</label>
+            </div>
+            }
+            
+
+        </div>
+        <!-- Price End -->
+
+        <!-- Color Start -->
+        <div class="border-bottom mb-4 pb-4">
+            <h5 class="font-weight-semi-bold mb-4">Renge göre filtrele</h5>
+
+            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                <input type="checkbox" class="custom-control-input" checked id="color-all">
+                <label class="custom-control-label" for="price-all">Hepsi</label>
+            </div>
+            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                <input type="checkbox" class="custom-control-input" id="color-1">
+                <label class="custom-control-label" for="color-1">Black</label>
+            </div>
+            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                <input type="checkbox" class="custom-control-input" id="color-2">
+                <label class="custom-control-label" for="color-2">White</label>
+            </div>
+            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                <input type="checkbox" class="custom-control-input" id="color-3">
+                <label class="custom-control-label" for="color-3">Red</label>
+            </div>
+            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                <input type="checkbox" class="custom-control-input" id="color-4">
+                <label class="custom-control-label" for="color-4">Blue</label>
+            </div>
+            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
+                <input type="checkbox" class="custom-control-input" id="color-5">
+                <label class="custom-control-label" for="color-5">Green</label>
+            </div>
+
+        </div>
+        <!-- Color End -->
+
+        <button> Filtrele </button>
+    </form>
+
+</div>
+<!-- Shop Sidebar End -->

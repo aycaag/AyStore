@@ -4,6 +4,8 @@ public interface IProductService
 {
     public  Task<ProductsDTO> GetAllProducts();
     public  Task<ProductDetailDTO> GetProductDetail(int id);
+
+    public Task<ProductsDTO> GetAllProductbyCategory(string categoryName);
     
 }
 
@@ -18,7 +20,14 @@ public class ProductService : IProductService
         _mapper = mapper;
     }
 
- 
+    public async Task<ProductsDTO> GetAllProductbyCategory(string categoryName)
+    {
+        var products =  await _webapiRepository.GetAllProductbyCategory(categoryName);
+
+        ProductsDTO result = _mapper.Map<ProductsDTO>(products);
+
+        return result;
+    }
 
     public async Task<ProductsDTO> GetAllProducts()
     {

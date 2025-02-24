@@ -11,6 +11,8 @@ public interface IWebContextRepository
     public int? SignIn (string email, string password);
 
     public Task<User> GetUserInfo (int? userID);
+
+    public Task<List<PriceFiltersDMO>> GetAllPriceFilters();
 }
 
 public class WebContextRepository : IWebContextRepository
@@ -70,6 +72,7 @@ public class WebContextRepository : IWebContextRepository
         return registerDMOs;
     }
 
+ 
     public async Task<List<CategoriesDMO>> GetCategories()
     {
 
@@ -127,4 +130,19 @@ public class WebContextRepository : IWebContextRepository
         return userID  ;
         }     
     }
+
+       public async Task<List<PriceFiltersDMO>> GetAllPriceFilters()
+    {
+         var responsePriceList = await _ayStoreContext.PriceFilters.Select(s => new PriceFiltersDMO
+        {  
+            Id = s.Id,
+            Name = s.Name,
+            MinPrice = s.MinPrice,
+            MaxPrice = s.MaxPrice,
+
+        }).ToListAsync();
+
+        return responsePriceList;
+    }
+
 }

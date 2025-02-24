@@ -11,12 +11,18 @@ public abstract class BaseController : Controller
     protected readonly IMapper _mapper;
 
     protected readonly IShopCartService _shopCartService;
+    protected readonly IFilterService _filterService;
 
-    public BaseController(ICategoriesService categoriesService, IMapper mapper, IShopCartService shopCartService)
+    public BaseController(ICategoriesService categoriesService, 
+                          IMapper mapper, 
+                          IShopCartService shopCartService,
+                          IFilterService filterService
+                         )
     {
         _categoriesService = categoriesService;
         _mapper = mapper;
         _shopCartService = shopCartService;
+        _filterService = filterService; 
     }
 
     // Her action çalışmadan önce bu metod çalışır.
@@ -24,7 +30,9 @@ public abstract class BaseController : Controller
     {
 
         // Oturum açmış mı kontrolü
-        var token = Request.Cookies["JWToken"];
+
+        // var token = Request.Cookies["JWToken"];
+        var token = HttpContext.Session.GetString("JWToken");
 
         if (!string.IsNullOrEmpty(token))
         {
@@ -49,6 +57,11 @@ public abstract class BaseController : Controller
         int cartsCount = _shopCartService.GetCart().CartItems.Sum(x => x.Quantity);
 
         ViewBag.CartItemsCount = cartsCount;
+
+        // Filter Alanlarını ViewBag'e ekleyelim
+
+         
+
 
 
 

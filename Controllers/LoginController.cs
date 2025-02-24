@@ -20,8 +20,9 @@ public class LoginController : BaseController
         IShopCartService shopCartService,
         ILoginService loginService,
         IPasswordHelper passwordHelper,
-        IConfiguration configuration)
-        : base(categoriesService, mapper, shopCartService)
+        IConfiguration configuration,
+        IFilterService filterService)
+        : base(categoriesService, mapper, shopCartService,filterService)
     {
         _loginService = loginService;
         _passwordHelper = passwordHelper;
@@ -58,7 +59,8 @@ public class LoginController : BaseController
                 var token = await GenerateJwtToken(userID);
                 
                 // Kullanıcı bilgilerini Coooki'ye kaydediyoruz
-                Response.Cookies.Append("JWToken", token, new CookieOptions { HttpOnly = true, Secure = true }); // cookie'ye kaydetme 
+                HttpContext.Session.SetString("JWToken", token);
+                // Response.Cookies.Append("JWToken", token, new CookieOptions { HttpOnly = true, Secure = true }); // cookie'ye kaydetme 
                 
                 return RedirectToAction("Index", "Home");
             }
@@ -110,7 +112,7 @@ public class LoginController : BaseController
 
     public IActionResult Logout()
     {
-        Response.Cookies.Delete("JWToken"); // Cookie'den sil
+        HttpContext.Session.Clear(); // Bütün session verilerini siler
 
         return RedirectToAction("Index");
     }

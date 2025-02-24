@@ -12,11 +12,15 @@
                 </a>
                 <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
                     id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
-                     <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
+                    <div class="navbar-nav w-100 overflow-hidden" style="height-min: 250px ;height:auto">
                         
                        @foreach (var item in ViewBag.Categories as List<CategoryViewModel>)
                         {
-                         <a href="" class="nav-item nav-link">@item.Name </a>
+                         @* <a href="/Product/ProductbyCategory?categoryName=@item.Name" class="nav-item nav-link">@item.Name </a> *@
+                            <form action="/Product/FilterbyProduct" method="post">
+                            <input type="hidden" name="filters.CategoryName" value="@item.Name" style="border:none;background-color: none;"/>
+                            <button type="submit" class="nav-item nav-link btn-link" style="border:none; background-color: white;">@item.Name</button>
+                            </form>
                         }
                         
                     </div> 

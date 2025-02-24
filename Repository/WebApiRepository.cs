@@ -8,6 +8,8 @@ public interface IWebApiRepository
     public  Task<ProductsDMO> GetAllProducts();
 
     public Task<ProductDetailDMO> GetProductDetail(int id);   
+
+    public Task<ProductsDMO> GetAllProductbyCategory(string categoryName);
 }
 public class WebApiRepository : IWebApiRepository
 {
@@ -18,6 +20,15 @@ public class WebApiRepository : IWebApiRepository
     public WebApiRepository()
     {
         client = new RestClient(options);
+    }
+
+    public async Task<ProductsDMO> GetAllProductbyCategory(string categoryName)
+    {
+        var request = new RestRequest("products/category?type="+categoryName,Method.Get);
+        var response = await client.GetAsync(request);
+
+        ProductsDMO result = JsonConvert.DeserializeObject<ProductsDMO>(response.Content);
+        return result;
     }
 
     public async Task<ProductsDMO> GetAllProducts()
@@ -37,6 +48,8 @@ public class WebApiRepository : IWebApiRepository
         ProductDetailDMO result = JsonConvert.DeserializeObject<ProductDetailDMO>(response.Content);
         return result;
     }
+
+     
 
 
 

@@ -14,9 +14,10 @@ public class ShopCartController : BaseController
         ICategoriesService categoriesService,
         IMapper mapper,
         IShopCartService shopCartService,
-        IProductService productService
+        IProductService productService,
+        IFilterService filterService
         )
-        : base(categoriesService, mapper,shopCartService)
+        : base(categoriesService, mapper,shopCartService,filterService)
     {
         _productService = productService;
     }

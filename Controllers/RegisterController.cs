@@ -11,8 +11,9 @@ public class RegisterController : BaseController
         IMapper mapper,
         IShopCartService shopCartService,
         IRegisterService registerService,
-        IPasswordHelper passwordHelper)
-        : base(categoriesService, mapper, shopCartService)
+        IPasswordHelper passwordHelper,
+        IFilterService filterService)
+        : base(categoriesService, mapper, shopCartService,filterService)
     {   
         _registerService = registerService;
         _passwordHelper = passwordHelper;

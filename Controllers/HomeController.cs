@@ -17,8 +17,9 @@ public class HomeController : BaseController
         IMapper mapper,
         IProductService productService,
         ICategoriesService categoriesService,
-        IShopCartService shopCartService)
-        : base(categoriesService, mapper, shopCartService)
+        IShopCartService shopCartService,
+        IFilterService filterService)
+        : base(categoriesService, mapper, shopCartService,filterService)
     {
         _productService = productService;
         // _mapper = mapper;

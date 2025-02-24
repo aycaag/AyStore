@@ -20,6 +20,12 @@ public class MappingHelper : Profile
         // Registers
         CreateMap<RegisterDMO,RegisterDTO>().ReverseMap();
         CreateMap<RegisterDTO,RegisterViewModel>().ReverseMap();
+
+        // Filters 
+            // Price
+            CreateMap<PriceFiltersDMO,PriceFiltersDTO>().ReverseMap();
+            CreateMap<PriceFiltersDTO,PriceFilters>().ReverseMap();
+
     }
 
    
