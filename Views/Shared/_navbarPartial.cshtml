@@ -1,3 +1,5 @@
+
+ 
   <!-- Navbar Start -->
     <div class="container-fluid">
         <div class="row border-top px-xl-5">
@@ -38,8 +40,27 @@
                             <a href="contact.html" class="nav-item nav-link">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
-                            <a  asp-controller="Login" asp-action="Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Login" ? "active" : "") ">Login</a>
+                            @* <a  asp-controller="Login" asp-action="Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Login" ? "active" : "") ">Login</a> *@
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item dropdown" style="width:auto; min-width:100px">
+                                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+                                        @User.Identity.Name 
+                                    </a>
+                                    <div class="dropdown-menu">
+                                       @* <a class="dropdown-item" asp-controller="Account" asp-action="Profile">Profil</a> *@
+                                        <a class="dropdown-item" asp-controller="Login" asp-action="Logout">Çıkış Yap</a>
+                                    </div>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Login" asp-action="Index">Giriş Yap</a>
+                                </li>
                             <a  asp-controller="Register" asp-action="Index"  class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Register" ? "active" : "") ">Üye Ol</a>
+                            }
+
                         </div>
                     </div>
                 </nav>

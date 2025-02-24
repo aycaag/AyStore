@@ -1,7 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -32,8 +36,9 @@ public class LoginController : BaseController
         return View();
     }
 
+
     [HttpPost]
-    public IActionResult Index(LoginViewModel model)
+    public async Task<IActionResult> Index(LoginViewModel model)
     {
         string hashedPassword = _passwordHelper.HashPassword(model.Password);
 
@@ -44,19 +49,18 @@ public class LoginController : BaseController
 
         try
         {
-            bool userControl = _loginService.SignIn(model.Email, hashedPassword);
-            if (userControl)
+            int? userID = _loginService.SignIn(model.Email, hashedPassword);
+
+
+            if (userID != null)
             {
-                // JWT Token oluşturma 
-                var token = GenerateJwtToken(model.Email);
-                // Token'ı session ile oturumda sakla
-                HttpContext.Session.SetString("JWTToken", token);
-                // Mesajı ekrana gönder 
-                TempData["Success"] = "Giriş işlemi başarılı şekilde gerçekleşti!";
-
-                // Anasayfayı aç
+                var user = await _loginService.GetUserInfo(userID);
+                var token = await GenerateJwtToken(userID);
+                
+                // Kullanıcı bilgilerini Coooki'ye kaydediyoruz
+                Response.Cookies.Append("JWToken", token, new CookieOptions { HttpOnly = true, Secure = true }); // cookie'ye kaydetme 
+                
                 return RedirectToAction("Index", "Home");
-
             }
 
             return View(model);
@@ -73,17 +77,23 @@ public class LoginController : BaseController
     }
 
 
-    private string GenerateJwtToken(string username)
+    private async Task<string> GenerateJwtToken(int? userID)
     {
         var JwtSettings = _configuration.GetSection("JwtSettings");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSettings["Key"]));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+        User user = await _loginService.GetUserInfo(userID);
+
+        string userFullName = user.Name + " " + user.LastName;
+
         var claims = new[]
-        {
-        new Claim(ClaimTypes.Name, username),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-    };
+       {
+            new Claim(ClaimTypes.Name, userFullName),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+
 
         var token = new JwtSecurityToken(
             issuer: JwtSettings["Issuer"],
@@ -93,8 +103,18 @@ public class LoginController : BaseController
             signingCredentials: credentials
         );
 
+
         return new JwtSecurityTokenHandler().WriteToken(token);
+
     }
+
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("JWToken"); // Cookie'den sil
+
+        return RedirectToAction("Index");
+    }
+
 
 
 }

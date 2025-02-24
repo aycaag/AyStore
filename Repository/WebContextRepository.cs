@@ -8,7 +8,9 @@ public interface IWebContextRepository
 
     public Task<RegisterDMO> AddRegister(RegisterDMO registerDMOs);
 
-    public bool SignIn (string email, string password);
+    public int? SignIn (string email, string password);
+
+    public Task<User> GetUserInfo (int? userID);
 }
 
 public class WebContextRepository : IWebContextRepository
@@ -84,17 +86,45 @@ public class WebContextRepository : IWebContextRepository
 
     }
 
-    public bool SignIn(string email, string password)
+    public async Task<User> GetUserInfo(int? userID)
+    {
+        if (userID == null)
+        {
+            throw new Exception("User ID bulunamadı ! ");
+        }
+        var user = await _ayStoreContext.Users
+        .Where(s => s.Id == userID)
+        .Select(s=> new User 
+                {
+                Id = s.Id,
+                Name = s.Name,
+                LastName = s.LastName
+                })
+        .FirstOrDefaultAsync();  
+
+
+        return user;
+
+        
+
+    }
+
+    public int? SignIn(string email, string password)
     {
         
-        bool userControl = _ayStoreContext.Login.Any(x => x.Email == email && x.Password == password);
+        int? userID = _ayStoreContext.Login
+        .Where(x => x.Email == email && x.Password == password)
+        .Select(x=> x.UserId)
+        .FirstOrDefault();
 
-        if (!userControl)
+        if (userID == null)
         {
-            throw new Exception("Email ya da şifre hatalı ! ");
+        throw new Exception("Email ya da şifre hatalı ! ");
+         
         }
-
-        return userControl  ;
-              
+        else
+        {
+        return userID  ;
+        }     
     }
 }

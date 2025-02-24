@@ -6,6 +6,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,12 +45,23 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = JwtSettings["Issuer"],
         ValidAudience = JwtSettings["Audience"],
-        ClockSkew = TimeSpan.Zero , // token süresi kesin olarak dolması için eklenmiştir.
+        ClockSkew = TimeSpan.Zero, // token süresi kesin olarak dolması için eklenmiştir.
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSettings["Key"]))
     };
 
 
 });
+
+//Cookie
+// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//     .AddCookie(options =>
+//     {
+//         options.LoginPath = "/Login";
+//         options.LogoutPath = "/Logout";
+//         options.AccessDeniedPath = "/AccessDenied";
+//     });
+
+builder.Services.AddAuthorization();
 
 //Context
 builder.Services.AddDbContext<AyStoreContext>(option =>
@@ -64,18 +76,20 @@ builder.Services.AddAutoMapper(typeof(MappingHelper).Assembly);
 builder.Services.AddSession(option =>
 {
     option.IdleTimeout = TimeSpan.FromMinutes(30); // session'ın süresini   
+    option.Cookie.IsEssential = true; // Çerezleri zorunlu yaparak session'ı düzgün çalıştırabilirsiniz
 });
+
 
 builder.Services.AddHttpContextAccessor();
 // Bağımlılıklar ; 
-builder.Services.AddScoped<IWebApiRepository,WebApiRepository>();
-builder.Services.AddScoped<IWebContextRepository,WebContextRepository>();
-builder.Services.AddScoped<IProductService,ProductService>();
-builder.Services.AddScoped<ICategoriesService,CategoriesService>();
-builder.Services.AddScoped<IShopCartService,ShopCartService>();
-builder.Services.AddScoped<IRegisterService,RegisterService>();
-builder.Services.AddScoped<IPasswordHelper,PasswordHelper>();
-builder.Services.AddScoped<ILoginService,LoginService>();
+builder.Services.AddScoped<IWebApiRepository, WebApiRepository>();
+builder.Services.AddScoped<IWebContextRepository, WebContextRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoriesService, CategoriesService>();
+builder.Services.AddScoped<IShopCartService, ShopCartService>();
+builder.Services.AddScoped<IRegisterService, RegisterService>();
+builder.Services.AddScoped<IPasswordHelper, PasswordHelper>();
+builder.Services.AddScoped<ILoginService, LoginService>();
 
 
 
@@ -89,12 +103,17 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-app.UseSession();
+
 app.UseHttpsRedirection();
-app.UseRouting();
-app.UseStaticFiles();
+app.UseRouting(); 
+
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSession();
+
+app.UseStaticFiles();
+
 app.MapStaticAssets();
 
 app.MapControllerRoute(

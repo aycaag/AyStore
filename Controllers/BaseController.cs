@@ -1,4 +1,7 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -21,13 +24,19 @@ public abstract class BaseController : Controller
     {
 
         // Oturum açmış mı kontrolü
-        var token = HttpContext.Session.GetString("JWTToken");
+        var token = Request.Cookies["JWToken"];
 
-        // if (string.IsNullOrEmpty(token))
-        // {
-        //     // Kullanıcı giriş yapmamışsa, Login sayfasına yönlendir
-        //     context.Result = RedirectToAction("Index", "Login");
-        // }
+        if (!string.IsNullOrEmpty(token))
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+            var claims = jwtToken.Claims.ToList();
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            HttpContext.User = principal;
+        }
         ///////////
         
         // Kategori verisini çekiyoruz
