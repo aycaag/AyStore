@@ -5,5 +5,6 @@ public class Filters
     public string PriceName { get; set; }
     public List<string> Colors { get; set; } = new List<string>();
     public string ColorName { get; set; }
+    // public string SelectSorted {get;set;}
 }
 

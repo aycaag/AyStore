@@ -107,11 +107,11 @@ public class ProductController : BaseController
         // Filtre alanındaki price verisini çekelim ;
         List<PriceFiltersDTO> priceListDTOs = await _filterService.GetPriceFilters();
         List<PriceFilters> priceList = _mapper.Map<List<PriceFilters>>(priceListDTOs);
-        model.filters.Price = priceList;
+        //model.filters.Price = priceList;
 
         // Color alanındaki color verisini çekelim ;
         ColorsFilters colorsFilters = await _filterService.GetProductColorsAsync();
-        model.filters.Colors = colorsFilters.Colors; 
+        //model.filters.Colors = colorsFilters.Colors; 
         
 
         ProductsDTO product;

@@ -36,6 +36,40 @@ $(document).ready(function () {
     });
 });
 
+/// Sıralama için product lisatesini çekelim:
+let products = []; // Burada ürünleri bir listeye alacağız
 
+// Sayfa yüklendiğinde ürünleri çek ve listeyi oluştur
+$(document).ready(function () {
+    $(".product-item").each(function () {
+        let price = parseFloat($(this).find("h6:first").text().replace("$", ""));
+        products.push({ element: $(this).parent(), price: price });
+    });
+});
 
+// Fonksiyonlarr 
+$(document).ready(function priceAsc(){
+    products.sort(function(a,b){
+        return a.price - b.price;
+    });
+
+renderProducts (Product);
+});
+
+$(document).ready(function priceDesc(){
+    products.sort(function(a,b){
+        return b.price - a.price;
+    });
+
+renderProducts (Product);
+});
+
+// Ürünleri sıralı olarak tekrar render et
+function renderProducts(sortedProducts) {
+    let container = $(".row.pb-3");
+    container.html(""); // Önce mevcut içeriği temizle
+    sortedProducts.forEach(product => {
+        container.append(product.element);
+    });
+}
 

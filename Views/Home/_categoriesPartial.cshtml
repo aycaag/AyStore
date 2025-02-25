@@ -13,7 +13,11 @@
                         <div class="position-relative" style="z-index: 1;">
                             <h5 class="text-uppercase text-primary mb-3"> %50'ye Varan İndirim </h5>
                             <h1 class="mb-4 font-weight-semi-bold">@item.Name</h1>
-                            <a href="/Product/ProductbyCategory?categoryName=@item.Name" class="btn btn-outline-primary py-md-2 px-md-3">Ürünleri Gör</a>
+                            @* <a href="/Product/ProductbyCategory?categoryName=@item.Name" class="btn btn-outline-primary py-md-2 px-md-3">Ürünleri Gör</a>  *@
+                            <form action="/Product/FilterbyProduct" method="post">
+                            <input type="hidden" name="filters.CategoryName" value="@item.Name" />
+                            <button type="submit" class="btn btn-outline-primary py-md-2 px-md-3">Ürünleri Gör</button>
+                            </form>
                         </div>
                     </div>
                 </div>
