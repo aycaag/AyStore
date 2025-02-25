@@ -24,7 +24,8 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 // Fluent Validation bağlantısı ;
 builder.Services.AddControllersWithViews()
-.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<RegisterModelValidator>());
+.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<RegisterModelValidator>())
+.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<CheckoutModelValidator>());
 
 
 //JWT Bearer

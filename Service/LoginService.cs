@@ -3,8 +3,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 public interface ILoginService
 {
-    public int? SignIn (string email , string password) ;
-    public Task<User> GetUserInfo (int? userID);
+    public int? SignIn(string email, string password);
+    public Task<User> GetUserInfo(int? userID);
+
+    public Task<Address> GetAddressInfo(int? userID);
+
+    public Task<Login> GetLoginInfo(int? userID);
 
 
 }
@@ -21,17 +25,27 @@ public class LoginService : ILoginService
 
     public async Task<User> GetUserInfo(int? userID)
     {
-       User user = await _webContextRepository.GetUserInfo(userID);
-       return user;
+        User user = await _webContextRepository.GetUserInfo(userID);
+        return user;
     }
 
-    public int? SignIn (string email,string password)
+    public async Task<Address> GetAddressInfo(int? userID)
     {
-        int? userID =  _webContextRepository.SignIn (email, password);
+        Address address = await _webContextRepository.GetAddressInfo(userID);
+        return address;
+    }
+    public async Task<Login> GetLoginInfo (int? userID)
+    {
+        Login login = await _webContextRepository.GetLoginInfo(userID);
+        return login;
+    }
+    public int? SignIn(string email, string password)
+    {
+        int? userID = _webContextRepository.SignIn(email, password);
 
-        return userID ;
+        return userID;
 
     }
 
-    
+
 }

@@ -58,7 +58,7 @@ public class LoginController : BaseController
                 var user = await _loginService.GetUserInfo(userID);
                 var token = await GenerateJwtToken(userID);
                 
-                // Kullanıcı bilgilerini Coooki'ye kaydediyoruz
+                // Kullanıcı bilgilerini Session'ye kaydediyoruz
                 HttpContext.Session.SetString("JWToken", token);
                 // Response.Cookies.Append("JWToken", token, new CookieOptions { HttpOnly = true, Secure = true }); // cookie'ye kaydetme 
                 
@@ -89,9 +89,11 @@ public class LoginController : BaseController
 
         string userFullName = user.Name + " " + user.LastName;
 
+
         var claims = new[]
        {
             new Claim(ClaimTypes.Name, userFullName),
+            new Claim(ClaimTypes.NameIdentifier, userID.ToString() ),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

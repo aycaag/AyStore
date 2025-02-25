@@ -24,6 +24,7 @@ public class ShopCartService : IShopCartService
     {
          Console.WriteLine("Sepet kaydediliyor... Ürün sayısı: " + cart.CartItems.Count);
         _httpContextAccessor.HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
+       
     }
 
     public Cart GetCart()

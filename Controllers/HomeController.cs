@@ -26,6 +26,7 @@ public class HomeController : BaseController
         // _categoriesService = categoriesService;
     }
 
+[HttpGet]
     public async Task<IActionResult> Index()
     {
         ViewData["ActivePage"] = "Home";
@@ -40,6 +41,7 @@ public class HomeController : BaseController
 
         return View(model);
     }
+
 
     public IActionResult Privacy()
     {

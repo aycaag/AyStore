@@ -1,15 +1,37 @@
+@model CheckoutViewModel
+<!-- Checkout Start -->
+<div class="container-fluid pt-5">
+    <form action="/Checkout/Index" method="post">
+    <div class="row px-xl-5">
 
-
-    <!-- Checkout Start -->
-    <div class="container-fluid pt-5">
-        <div class="row px-xl-5">
             <div class="col-lg-8">
-            @Html.Partial("_registerPartial")
+                <div class="mb-4">
+                    <h4 class="font-weight-semi-bold mb-4">Fatura-Sipariş Adresi </h4>
+                    <div class="row">
+                        @Html.Partial("_userInfoPartial", Model.user)
+                        @Html.Partial("_loginInfoPartial", Model.login)
+                        @Html.Partial("_billingAddressPartial", Model.address)
+
+                        <div class="col-md-12 form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input asp-for="CheckoutConfirm" type="checkbox" class="custom-control-input">
+                                <label class="custom-control-label" for="CheckoutConfirm">Onayla</label>
+                                <span asp-validation-for="CheckoutConfirm" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-4">
-                @Html.Partial("_orderTotalPartial")
-                @Html.Partial("_paymentPartial")
+                @Html.Partial("_orderTotalPartial", Model.shopcartVM)
+                <div class="card border-secondary mb-5">
+                    @Html.Partial("_paymentPartial")
+                    <div class="card-footer border-secondary bg-transparent">
+                        <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Siparişi Tamamla</button>
+                    </div>
+                </div>
             </div>
-        </div>
     </div>
-    <!-- Checkout End -->
+        </form>
+</div>
+<!-- Checkout End -->

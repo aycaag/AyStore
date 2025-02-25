@@ -8,9 +8,11 @@ public interface IWebContextRepository
 
     public Task<RegisterDMO> AddRegister(RegisterDMO registerDMOs);
 
-    public int? SignIn (string email, string password);
+    public int? SignIn(string email, string password);
 
-    public Task<User> GetUserInfo (int? userID);
+    public Task<User> GetUserInfo(int? userID);
+    public Task<Address> GetAddressInfo(int? userID);
+    public Task<Login> GetLoginInfo(int? userID);
 
     public Task<List<PriceFiltersDMO>> GetAllPriceFilters();
 }
@@ -35,7 +37,7 @@ public class WebContextRepository : IWebContextRepository
         if (emailExists)
         {
             throw new Exception("Bu e-posta adresi zaten sistemde mevcut !! ");
-            
+
         }
 
 
@@ -72,7 +74,7 @@ public class WebContextRepository : IWebContextRepository
         return registerDMOs;
     }
 
- 
+
     public async Task<List<CategoriesDMO>> GetCategories()
     {
 
@@ -97,44 +99,92 @@ public class WebContextRepository : IWebContextRepository
         }
         var user = await _ayStoreContext.Users
         .Where(s => s.Id == userID)
-        .Select(s=> new User 
-                {
-                Id = s.Id,
-                Name = s.Name,
-                LastName = s.LastName
-                })
-        .FirstOrDefaultAsync();  
+        .Select(s => new User
+        {
+            Id = s.Id,
+            Name = s.Name,
+            LastName = s.LastName,
+            PhoneNumber = s.PhoneNumber
+        })
+        .FirstOrDefaultAsync();
 
 
         return user;
 
-        
+    }
+
+
+    public async Task<Address> GetAddressInfo(int? userID)
+    {
+        if (userID == null)
+        {
+            throw new Exception("User ID bulunamadı ! ");
+        }
+        var address = await _ayStoreContext.Addresses
+            .Where(s => s.UserId == userID)
+            .Select(s => new Address
+            {
+                UserId = s.UserId,
+                AddressOne = s.AddressOne,
+                AddressTwo = s.AddressTwo,
+                Country = s.Country,
+                City = s.City,
+                State = s.State,
+                Code = s.Code,
+
+            })
+            .FirstOrDefaultAsync();
+
+
+        return address;
+
+    }
+
+    public async Task<Login> GetLoginInfo(int? userID)
+    {
+        if (userID == null)
+        {
+            throw new Exception("User ID bulunamadı ! ");
+        }
+        var login = await _ayStoreContext.Login
+                    .Where(s => s.UserId == userID)
+                    .Select(s=> new Login 
+                       {
+                        UserId = s.UserId,
+                        Email = s.Email,
+                        
+                       })
+                    .FirstOrDefaultAsync();
+
+
+
+        return login;
 
     }
 
     public int? SignIn(string email, string password)
     {
-        
+
         int? userID = _ayStoreContext.Login
         .Where(x => x.Email == email && x.Password == password)
-        .Select(x=> x.UserId)
+        .Select(x => x.UserId)
         .FirstOrDefault();
 
         if (userID == null)
         {
-        throw new Exception("Email ya da şifre hatalı ! ");
-         
+            throw new Exception("Email ya da şifre hatalı ! ");
+
         }
         else
         {
-        return userID  ;
-        }     
+            return userID;
+        }
     }
 
-       public async Task<List<PriceFiltersDMO>> GetAllPriceFilters()
+    public async Task<List<PriceFiltersDMO>> GetAllPriceFilters()
     {
-         var responsePriceList = await _ayStoreContext.PriceFilters.Select(s => new PriceFiltersDMO
-        {  
+        var responsePriceList = await _ayStoreContext.PriceFilters.Select(s => new PriceFiltersDMO
+        {
             Id = s.Id,
             Name = s.Name,
             MinPrice = s.MinPrice,
