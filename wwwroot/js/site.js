@@ -1,6 +1,4 @@
-﻿
-
-$(document).on("click", ".add-to-cart", function (e) {
+﻿$(document).on("click", ".add-to-cart", function (e) {
     e.preventDefault();// Sayfanın yenilenmesini engelle
 
     var productId = $(this).data("product-id"); // product-id değerini butondan al
@@ -12,64 +10,49 @@ $(document).on("click", ".add-to-cart", function (e) {
         data: { productId: productId },
         success: function (response) {
             if (response.success) {
-                alert(response.message); // Başarı mesajını göster
-                $("#cart-count").text(response.totalItems); // Sepet içindeki toplam ürün sayısını güncelle
-                ViewBag.CartItemsCount = text(response.totalItems)
-
-                // Kullanıcıyı bulunduğu sayfada tut
-                window.history.pushState({}, "", currentUrl);
+                $("#cart-count").text(response.totalItems); // Sepet sayısını güncelle
+                showToast(response.message); // SweetAlert ile Bildirim göster
+                window.history.pushState({}, "", currentUrl); // Sayfada kal
+                updateCartCount(); // sayfa geçişisnden sonra sepet sayısını güncelle
             }
         },
         error: function () {
-            alert("Ürün sepete eklenirken hata oluştu!");
+           showToast("Ürün sepete eklenirken hata oluştu!", "bg-danger"); // Hata mesajı göster
         }
     });
 });
 
 $(document).ready(function () {
+    updateCartCount();  // Sayfa yüklendiğinde sepet sayısını güncelle
+});
+
+function updateCartCount() {
     $.ajax({
-        url: "/Cart/GetCartCount", // Sepet ürün sayısını döndüren bir endpoint
+        url: "/ShopCart/GetCartCount",  // Sepet sayısını al
         type: "GET",
         success: function (response) {
-            $("#cart-count").text(response.totalItems); // Sepet ürün sayısını güncelle
+            $("#cart-count").text(response.totalItems);  // Sepet sayısını güncelle
+        },
+        error: function () {
+            console.error("Sepet sayısı alınamadı.");
         }
     });
-});
+}
 
-/// Sıralama için product lisatesini çekelim:
-let products = []; // Burada ürünleri bir listeye alacağız
-
-// Sayfa yüklendiğinde ürünleri çek ve listeyi oluştur
-$(document).ready(function () {
-    $(".product-item").each(function () {
-        let price = parseFloat($(this).find("h6:first").text().replace("$", ""));
-        products.push({ element: $(this).parent(), price: price });
-    });
-});
-
-// Fonksiyonlarr 
-$(document).ready(function priceAsc(){
-    products.sort(function(a,b){
-        return a.price - b.price;
-    });
-
-renderProducts (Product);
-});
-
-$(document).ready(function priceDesc(){
-    products.sort(function(a,b){
-        return b.price - a.price;
-    });
-
-renderProducts (Product);
-});
-
-// Ürünleri sıralı olarak tekrar render et
-function renderProducts(sortedProducts) {
-    let container = $(".row.pb-3");
-    container.html(""); // Önce mevcut içeriği temizle
-    sortedProducts.forEach(product => {
-        container.append(product.element);
+function showToast(message, icon = "success") {
+    Swal.fire({
+        icon: icon, // success veya error
+        title: message,
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1000, // 1 saniye sonra otomatik kaybolur
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+        }
     });
 }
+
 
