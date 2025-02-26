@@ -37,7 +37,7 @@ public class WebApiRepository : IWebApiRepository
 
     public async Task<ProductsDMO> GetAllProducts()
     {
-        var request = new RestRequest("products", Method.Get);
+        var request = new RestRequest("products?limit=150", Method.Get);
         var response = await client.GetAsync(request);
 
         ProductsDMO result = JsonConvert.DeserializeObject<ProductsDMO>(response.Content);

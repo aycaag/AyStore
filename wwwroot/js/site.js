@@ -2,12 +2,13 @@
     e.preventDefault();// Sayfanın yenilenmesini engelle
 
     var productId = $(this).data("product-id"); // product-id değerini butondan al
+    var quantity = $(this).closest(".d-flex").find(".quantity-input").val() || 1; // otomatik olarak alacak // Kullanıcıdan alınan miktar- yoksa 1 gelecek 
     var currentUrl = window.location.pathname
 
     $.ajax({
         url: "/ShopCart/AddToCart",  // Controller'daki endpoint
         type: "POST",
-        data: { productId: productId },
+        data: { productId: productId, quantity: quantity },
         success: function (response) {
             if (response.success) {
                 $("#cart-count").text(response.totalItems); // Sepet sayısını güncelle
@@ -17,7 +18,7 @@
             }
         },
         error: function () {
-           showToast("Ürün sepete eklenirken hata oluştu!", "bg-danger"); // Hata mesajı göster
+            showToast("Ürün sepete eklenirken hata oluştu!", "bg-danger"); // Hata mesajı göster
         }
     });
 });
@@ -54,5 +55,21 @@ function showToast(message, icon = "success") {
         }
     });
 }
+
+$(document).ready(function () {
+    $(".btn-plus").click(function () {
+        var input = $(this).closest(".quantity").find(".quantity-input");
+        var currentValue = parseInt(input.val()) || 1;
+        input.val(currentValue + 1);
+    });
+
+    $(".btn-minus").click(function () {
+        var input = $(this).closest(".quantity").find(".quantity-input");
+        var currentValue = parseInt(input.val()) || 1;
+        if (currentValue > 1) {
+            input.val(currentValue - 1);
+        }
+    });
+})
 
 

@@ -37,14 +37,14 @@ public class ShopCartController : BaseController
         return View(model);
     }
 
-    public async Task<IActionResult> AddToCart(int productId, string returnUrl)
+    public async Task<IActionResult> AddToCart(int productId, string returnUrl,int quantity)
     //  (int productId,string productBrand ,string productModel, decimal price, decimal previousPrice,int quantity)
     {
 
         ProductDetailDTO productDTO = await _productService.GetProductDetail(productId);
         Product product = productDTO.product;
 
-        int quantity = 1;
+        // int quantity = 1;
         var item = new CartItem
         {
             ProductId = productId,
@@ -73,7 +73,6 @@ public class ShopCartController : BaseController
 
     public async Task<IActionResult> DecreaseQuantityOfProduct(int productId)
     {
-
         _shopCartService.DecreaseQuantityOfProduct(productId);
         return RedirectToAction("Index");
     }
