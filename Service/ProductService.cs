@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using AutoMapper;
 
 public interface IProductService
@@ -6,6 +7,8 @@ public interface IProductService
     public  Task<ProductDetailDTO> GetProductDetail(int id);
 
     public Task<ProductsDTO> GetAllProductbyCategory(string categoryName);
+
+    public Task<ProductsDTO> GetProductbySearch(string searchTerm);
     
 }
 
@@ -32,6 +35,14 @@ public class ProductService : IProductService
     public async Task<ProductsDTO> GetAllProducts()
     {
         var products =  await _webapiRepository.GetAllProducts();
+        ProductsDTO result = _mapper.Map<ProductsDTO>(products);
+
+        return result;
+    }
+
+    public async Task<ProductsDTO> GetProductbySearch(string searchTerm)
+    {
+        var products = await _webapiRepository.GetProductbySearch(searchTerm);
         ProductsDTO result = _mapper.Map<ProductsDTO>(products);
 
         return result;

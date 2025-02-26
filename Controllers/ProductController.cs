@@ -43,6 +43,17 @@ public class ProductController : BaseController
         return View(model);
     }
 
+    public async Task<IActionResult> GetProductsbySearch(string searchTerm)
+    {
+        ViewData["ActivePage"] = "Product";
+        ProductViewModel model = new ProductViewModel();   
+
+        var products = await _productService.GetProductbySearch(searchTerm);
+        var productViewModel = _mapper.Map<ProductViewModel>(products);
+        model.products = productViewModel.products;
+
+        return View("Index",model);
+    }
 
     public async Task<ActionResult> ProductDetail(int id)
     {
@@ -54,29 +65,6 @@ public class ProductController : BaseController
 
         return View(model);
     }
-
-    // [HttpGet]
-    // public async Task<ActionResult> ProductbyCategory(string categoryName)
-    // {
-    //     if (categoryName == null || categoryName == "all")
-    //     {
-    //         return RedirectToAction("Index");
-    //     }
-    //     ViewData["ActivePage"] = "Product";
-    //     ViewData["ActiveCategory"] = categoryName;
-
-    //     categoryName = categoryName.ToLower().Replace("ı", "i");
-
-    //     ProductViewModel model = new ProductViewModel();
-
-    //     var productsbyCategory = await _productService.GetAllProductbyCategory(categoryName);
-    //     var productViewModel = _mapper.Map<ProductViewModel>(productsbyCategory);
-    //     model.products = productViewModel.products;
-
-    //     return View("Index", productViewModel);
-
-    // }
-
 
     [HttpPost]
     public async Task<ActionResult> FilterbyProduct(Filters filters)

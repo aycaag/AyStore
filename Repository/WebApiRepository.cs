@@ -12,6 +12,8 @@ public interface IWebApiRepository
     public Task<ProductsDMO> GetAllProductbyCategory(string categoryName);
 
     public Task<ColorsFilters> GetProductColorsAsync();
+
+    public Task<ProductsDMO> GetProductbySearch(string searchTerm);
 }
 public class WebApiRepository : IWebApiRepository
 {
@@ -40,6 +42,18 @@ public class WebApiRepository : IWebApiRepository
 
         ProductsDMO result = JsonConvert.DeserializeObject<ProductsDMO>(response.Content);
         return result;
+    }
+
+    public async Task<ProductsDMO> GetProductbySearch(string searchTerm)
+    {
+        var request = new RestRequest("products", Method.Get);
+        var response = await client.GetAsync(request);
+
+        ProductsDMO result = JsonConvert.DeserializeObject<ProductsDMO>(response.Content);
+        
+        result.products = result.products.Where(x => x.brand.StartsWith(searchTerm, StringComparison.OrdinalIgnoreCase) || x.model.StartsWith(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        return result;        
     }
 
     public async Task<ProductDetailDMO> GetProductDetail(int id)

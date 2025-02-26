@@ -39,9 +39,9 @@
                         <div class="navbar-nav mr-auto py-0">
                             <a asp-controller="Home" asp-action="Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Home" ? "active" : "") "> Ana Sayfa</a>
                             <a asp-controller="Product" asp-action="Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Product" ? "active" : "") ">Ürünler</a>
-                            <a asp-controller="ShopCart" asp-action="Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "ShopCart" ? "active" : "")  ">Sepet</a>
-                            <a asp-controller="ShopCart" asp-action="Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Checkout" ? "active" : "") ">Ödeme</a>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            @* <a asp-controller="ShopCart" asp-action="Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "ShopCart" ? "active" : "")  ">Sepet</a>
+                            <a asp-controller="ShopCart" asp-action="Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Checkout" ? "active" : "") ">Ödeme</a> *@
+                            @* <a href="contact.html" class="nav-item nav-link">Contact</a> *@
                         </div>
                         <div class="navbar-nav ml-auto py-0">
                             @* <a  asp-controller="Login" asp-action="Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Login" ? "active" : "") ">Login</a> *@
