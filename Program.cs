@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // builder.Services.AddControllersWithViews();
+
+
+
 
 // Otomatik gelen validaiton'lar kaldırılması için eklenmiştir.
 builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -53,14 +57,6 @@ builder.Services.AddAuthentication(options =>
 
 });
 
-//Cookie
-// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//     .AddCookie(options =>
-//     {
-//         options.LoginPath = "/Login";
-//         options.LogoutPath = "/Logout";
-//         options.AccessDeniedPath = "/AccessDenied";
-//     });
 
 builder.Services.AddAuthorization();
 
@@ -68,6 +64,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddDbContext<AyStoreContext>(option =>
   option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+
 
 //AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingHelper).Assembly);
@@ -93,7 +91,10 @@ builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<IPasswordHelper, PasswordHelper>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IFilterService, FilterService>();
-
+builder.Services.AddScoped<ICheckoutService, CheckoutService>();
+// Admin Bağımlılıkları 
+builder.Services.AddScoped<IAdminContextRepository,AdminContextRepository>();
+builder.Services.AddScoped<IAdminDashboardService,AdminDashboardService>();
 
 
 ///// 

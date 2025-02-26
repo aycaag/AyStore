@@ -9,6 +9,7 @@ public class CheckoutController : BaseController
 {
     private readonly ILoginService _loginService;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ICheckoutService _checkoutService;
 
     public CheckoutController(
         ICategoriesService categoriesService,
@@ -16,11 +17,14 @@ public class CheckoutController : BaseController
         IShopCartService shopCartService,
         IFilterService filterService,
         ILoginService loginService,
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        ICheckoutService checkoutService)
         : base(categoriesService, mapper, shopCartService, filterService)
     {
         _loginService = loginService;
         _httpContextAccessor = httpContextAccessor;
+        _checkoutService = checkoutService;
+
     }
 
     public async Task<IActionResult> Index()
@@ -82,65 +86,111 @@ public class CheckoutController : BaseController
         model.user = new User();
         model.address = new Address();
         model.login = new Login();
-        
+
+        // önce token bakıyoruz. token yoksa login ekranına gönderiyoruz. 
+        // token varsa modeli dolduruyoruz.
+        // eğer model is valid değilse modele geri gönderiyoruz. 
+        // isvalid ise sipariş oluşturuyoruz ana sayfaya gönderiyoruz. 
+
+
+        var token = HttpContext.Session.GetString("JWToken");
+
+        int? userId = 0;
+
+        if (token != null)
+        {
+
+            // kullanıcı doğrulamak için 
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+            var userIdClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            // 
+            if (userIdClaim != null)
+            {
+                userId = int.Parse(userIdClaim.Value);
+                // Kullanıcı ID'ye göre işlemler yapılabilir
+
+                User user = await _loginService.GetUserInfo(userId);
+                model.user = user;
+
+                Address address = await _loginService.GetAddressInfo(userId);
+                model.address = address;
+
+                Login login = await _loginService.GetLoginInfo(userId);
+                model.login = login;
+
+
+                Cart cart = _shopCartService.GetCart();
+                model.shopcartVM.CartItems = cart.CartItems;
+
+            }
+            else
+            {
+                throw new Exception("UserID bulunamadı ' ");
+            }
+
+        }
+        else if (token == null) // token yoksa kullanıcı giriş yapmamıştır giriş yapılmasını zorluyoruz.
+        {
+            return RedirectToAction("Index", "Login");
+        }
 
         if (!ModelState.IsValid)
         {
-            
-                foreach (var key in ModelState.Keys)
-                {
-                    var errors = ModelState[key].Errors;
-                    foreach (var error in errors)
-                    {
-                        Console.WriteLine($"Hata: {key} => {error.ErrorMessage}");
-                    }
-                }
-            
+            // hataları console'a yazdıralım kontrol için 
+            // foreach (var key in ModelState.Keys)
+            // {
+            //     var errors = ModelState[key].Errors;
+            //     foreach (var error in errors)
+            //     {
+            //         Console.WriteLine($"Hata: {key} => {error.ErrorMessage}");
+            //     }
+            // }
+            return View(model);
+        }
 
-            var token = HttpContext.Session.GetString("JWToken");
+        // herşey yolundaysa sipariş başarılıdır. Ancak burada database'e yazmamız gerekir.
 
-            if (token != null)
+
+        // Başarılı siparişleri database'e ekleyelim 
+
+        DateTime simdi = DateTime.Now;
+
+        // Random sipariş no oluşturalım : 
+        Random random = new Random(); // Yeni bir Random nesnesi oluştur
+        string harf = (Convert.ToChar(random.Next(97, 122)) + Convert.ToChar(random.Next(97, 122))).ToString();
+        string sayi = random.Next(1234, 10000).ToString();
+        string orderNo = '#' + harf + sayi;
+        Console.WriteLine("Orderno : {0}" + orderNo);
+        //// 
+
+        ///Sipariş numarasını OrderNumber'a gönderip kaydedelim 
+        await _checkoutService.AddOrderNumber(orderNo, userId);
+
+        /// Siparşi Order tablosuna kaydedelim.       
+        if (model.shopcartVM.CartItems.Count > 0)   
+        {
+
+            foreach ( var item in model.shopcartVM.CartItems )
             {
-                int? userId;
+                Order order = new Order();
 
-                // kullanıcı doğrulamak için 
-                var handler = new JwtSecurityTokenHandler();
-                var jwtToken = handler.ReadJwtToken(token);
-                var userIdClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-                // 
-                if (userIdClaim != null)
-                {
-                    userId = int.Parse(userIdClaim.Value);
-                    // Kullanıcı ID'ye göre işlemler yapılabilir
-
-                    User user = await _loginService.GetUserInfo(userId);
-                    model.user = user;
-
-                    Address address = await _loginService.GetAddressInfo(userId);
-                    model.address = address;
-
-                    Login login = await _loginService.GetLoginInfo(userId);
-                    model.login = login;
+                order.ProductName = item.Product.brand.ToUpper() + item.Product.model.ToUpper();
+                order.Price = item.Product.price;
+                order.Quantity = item.Quantity;
+                order.TotalPrice = item.Quantity*item.Product.price;
+                order.OrderDate = simdi;
+                order.OrderNo = orderNo;
+                order.UserID = userId;
 
 
-                    Cart cart = _shopCartService.GetCart();
-                    model.shopcartVM.CartItems = cart.CartItems;
+            await _checkoutService.AddOrder(order);
 
-                    return View(model);
-                }
-                else
-                {
-                    throw new Exception("UserID bulunamadı ' ");
-                }
-
-            }
-
-            return RedirectToAction("Index", "Login");
+            };
 
         }
 
-        @TempData["Success"] = "Sipariş başarıyla oluşturulmuştur!";
-
+        @TempData["Success"] = "Sipariş başarıyla oluşturulmuştur! Sipariş No :"+orderNo;
         // HttpContext.Session.Remove(CartSessionKey);
         _httpContextAccessor.HttpContext.Session.Remove("Cart");
 

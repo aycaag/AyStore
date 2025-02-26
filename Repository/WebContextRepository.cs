@@ -13,6 +13,9 @@ public interface IWebContextRepository
     public Task<User> GetUserInfo(int? userID);
     public Task<Address> GetAddressInfo(int? userID);
     public Task<Login> GetLoginInfo(int? userID);
+    public Task<bool> AddOrderNumber (string orderNumber, int? userID);
+
+    public Task<bool> AddOrder (Order order);
 
     public Task<List<PriceFiltersDMO>> GetAllPriceFilters();
 }
@@ -73,6 +76,55 @@ public class WebContextRepository : IWebContextRepository
 
         return registerDMOs;
     }
+
+
+    public async Task<bool> AddOrder (Order order)
+    {
+        try{
+            _ayStoreContext.Order.Add(
+                new Order{
+                    UserID = order.UserID,
+                    OrderNo =order.OrderNo,
+                    OrderDate = order.OrderDate,
+                    ProductName = order.ProductName,
+                    Price = order.Price,
+                    Quantity = order.Quantity,
+                    TotalPrice = order.TotalPrice,
+                }
+            );
+            await _ayStoreContext.SaveChangesAsync();
+
+            return true;
+        }
+        catch
+        {
+        throw new Exception("Sipariş-kaydı oluşturulurken hata oluştu!");
+        }
+    }
+
+    public async Task<bool> AddOrderNumber (string orderNumber, int? userID)
+    {
+        try
+        {
+        _ayStoreContext.OrderNumbers.Add(
+            new OrderNumbers{
+                OrderNo = orderNumber,
+                UserID = userID,
+            }
+        );
+        await _ayStoreContext.SaveChangesAsync();
+
+        return true;
+
+        }
+        catch 
+        {
+            
+        throw new Exception("Sipariş-no oluşturulurken hata oluştu!");
+         
+        }
+    }
+    
 
 
     public async Task<List<CategoriesDMO>> GetCategories()

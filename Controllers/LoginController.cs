@@ -60,7 +60,10 @@ public class LoginController : BaseController
                 
                 // Kullanıcı bilgilerini Session'ye kaydediyoruz
                 HttpContext.Session.SetString("JWToken", token);
-                // Response.Cookies.Append("JWToken", token, new CookieOptions { HttpOnly = true, Secure = true }); // cookie'ye kaydetme 
+                if (userID==1)
+                {
+                Response.Cookies.Append("JWToken", token, new CookieOptions { HttpOnly = true, Secure = true }); // cookie'ye kaydetme 
+                }
                 
                 return RedirectToAction("Index", "Home");
             }

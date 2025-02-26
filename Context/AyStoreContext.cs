@@ -19,5 +19,8 @@ public class AyStoreContext : DbContext
     public virtual DbSet<Login> Login { get; set; }
     public virtual DbSet<Address> Addresses { get; set; }
     public virtual DbSet<PriceFilters> PriceFilters { get; set; }
+    public virtual DbSet<Order> Order { get; set; }    
+    
+    public virtual DbSet<OrderNumbers> OrderNumbers { get; set; }    
 
 }
