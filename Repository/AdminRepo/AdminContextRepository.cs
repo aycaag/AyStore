@@ -6,6 +6,8 @@ public interface IAdminContextRepository
     public Task<int?> Revenue();
     public Task<int?> TotalProductQuantity ();
 
+    public Task<int?> VisitCount();
+
 }
 
 public class AdminContextRepository : IAdminContextRepository
@@ -53,5 +55,13 @@ public class AdminContextRepository : IAdminContextRepository
 
         totalQuantity = totalQuantity==null?0:totalQuantity;
         return totalQuantity;
+    }
+
+    public async Task<int?> VisitCount()
+    {
+        int? visitCount = _ayStoreContext.Visits.Select(s=>s.VisitSession).Count();
+        visitCount = visitCount==null?0:visitCount;
+        return visitCount;
+        
     }
 }

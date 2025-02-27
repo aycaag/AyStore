@@ -18,6 +18,8 @@ public interface IWebContextRepository
     public Task<bool> AddOrder (Order order);
 
     public Task<List<PriceFiltersDMO>> GetAllPriceFilters();
+
+    public Task<bool> AddVisit (Visits visit); 
 }
 
 public class WebContextRepository : IWebContextRepository
@@ -245,6 +247,28 @@ public class WebContextRepository : IWebContextRepository
         }).ToListAsync();
 
         return responsePriceList;
+    }
+
+
+
+    public async Task<bool> AddVisit (Visits visit)
+    {
+        bool existSession = await _ayStoreContext.Visits.Select(x=>x.VisitSession==visit.VisitSession).FirstOrDefaultAsync();
+        
+        if (!existSession)
+        {
+        _ayStoreContext.Visits.Add(new Visits{
+            Tarih = visit.Tarih,
+            VisitSession = visit.VisitSession,
+
+        });
+
+        _ayStoreContext.SaveChangesAsync();
+
+        return true;
+
+        }
+        return false;
     }
 
 }

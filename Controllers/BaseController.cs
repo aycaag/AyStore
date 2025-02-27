@@ -28,12 +28,10 @@ public abstract class BaseController : Controller
     public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         
-        // Oturum açmış mı kontrolü
 
-        // var token = Request.Cookies["JWToken"];
+        // Oturum açmış mı kontrolü
         var token = HttpContext.Session.GetString("JWToken");
         
-
         if (Request.Cookies["JWToken"]!=null)
         {
             token = Request.Cookies["JWToken"];

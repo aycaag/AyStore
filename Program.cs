@@ -92,6 +92,8 @@ builder.Services.AddScoped<IPasswordHelper, PasswordHelper>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IFilterService, FilterService>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
+builder.Services.AddScoped<IVisitService, VisitService>();
+
 // Admin Bağımlılıkları 
 builder.Services.AddScoped<IAdminContextRepository,AdminContextRepository>();
 builder.Services.AddScoped<IAdminDashboardService,AdminDashboardService>();

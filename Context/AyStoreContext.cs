@@ -22,5 +22,6 @@ public class AyStoreContext : DbContext
     public virtual DbSet<Order> Order { get; set; }    
     
     public virtual DbSet<OrderNumbers> OrderNumbers { get; set; }    
+    public virtual DbSet<Visits> Visits { get; set; }    
 
 }

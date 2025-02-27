@@ -12,16 +12,20 @@ public class HomeController : BaseController
     private readonly ILogger<HomeController> _logger;
     // private readonly IMapper _mapper;
     private readonly IProductService _productService;
+    protected readonly IVisitService _visitService;
 
     public HomeController(
         IMapper mapper,
         IProductService productService,
         ICategoriesService categoriesService,
         IShopCartService shopCartService,
-        IFilterService filterService)
+        IFilterService filterService,
+        IVisitService visitService
+        )
         : base(categoriesService, mapper, shopCartService,filterService)
     {
         _productService = productService;
+        _visitService = visitService;
         // _mapper = mapper;
         // _categoriesService = categoriesService;
     }
@@ -30,7 +34,9 @@ public class HomeController : BaseController
     public async Task<IActionResult> Index()
     {
         ViewData["ActivePage"] = "Home";
-        
+
+        await _visitService.AddVisit();
+
         IndexViewModel model = new IndexViewModel();
 
         //Product

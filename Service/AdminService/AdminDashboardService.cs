@@ -4,6 +4,7 @@ public interface IAdminDashboardService
     public Task<int?> SalesCount();
     public Task<int?> Revenue();
     public Task<int?> TotalProductQuantity();
+    public Task<int?> VisitCount();
 }
 
 public class AdminDashboardService : IAdminDashboardService
@@ -39,6 +40,13 @@ public class AdminDashboardService : IAdminDashboardService
     public async Task<int?> TotalProductQuantity()
     {
         int? response = await _AdmincontextRepository.TotalProductQuantity();
+        
+        return response;
+    }
+
+    public async Task<int?> VisitCount()
+    {
+        int? response = await _AdmincontextRepository.VisitCount();
         
         return response;
     }
