@@ -1439,6 +1439,18 @@ header .form-inline {
     color: #868e96;
     font-family: 'Open Sans';
     font-size: 12px; }
+  #flotPie1 + .legend {
+      width: 30%; /* Etiket kısmını sağa yerleştir */
+      float: right; /* Sağ tarafa yerleştir */
+      text-align: left; /* Etiketleri soldan hizala */
+    }
+    #flotPie1 + .legend tr {
+      padding: 5px;
+    }
+    
+    #flotPie1 + .legend .legendLabel {
+      text-align: left; /* Etiket metinlerini sola hizala */
+    }
 
 /* Stats Table */
 .table-stats table {
