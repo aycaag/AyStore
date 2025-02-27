@@ -32,10 +32,11 @@ public abstract class BaseController : Controller
         // Oturum açmış mı kontrolü
         var token = HttpContext.Session.GetString("JWToken");
         
-        if (Request.Cookies["JWToken"]!=null)
-        {
-            token = Request.Cookies["JWToken"];
-        }
+        // TEST EDERKEN KULLANILMAK ÜZERE YAZILMIŞTIR.
+        // if (Request.Cookies["JWToken"]!=null)
+        // {
+        //     token = Request.Cookies["JWToken"];
+        // }
 
         if (!string.IsNullOrEmpty(token))
         {

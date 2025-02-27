@@ -58,12 +58,14 @@ public class LoginController : BaseController
                 var user = await _loginService.GetUserInfo(userID);
                 var token = await GenerateJwtToken(userID);
                 
-                // Kullanıcı bilgilerini Session'ye kaydediyoruz
+                // // Kullanıcı bilgilerini Session'ye kaydediyoruz
                 HttpContext.Session.SetString("JWToken", token);
-                if (userID==1)
-                {
-                Response.Cookies.Append("JWToken", token, new CookieOptions { HttpOnly = true, Secure = true }); // cookie'ye kaydetme 
-                }
+                
+                // TEST EDERKEN KULLANILMAK ÜZERE YAZILMIŞTIR
+                // if (userID==1)
+                // {
+                // Response.Cookies.Append("JWToken", token, new CookieOptions { HttpOnly = true, Secure = true }); // cookie'ye kaydetme 
+                // }
                 
                 return RedirectToAction("Index", "Home");
             }
