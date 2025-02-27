@@ -2,6 +2,8 @@ public class DashboardViewModel
 {
     public  Widgets widgets {get; set;}  = new Widgets();  
     public int? VisitCount{get;set;} = 0;
+    public List<Order> orders {get;set;} = new List<Order>();
+    public List<VisitSummary> VisitSummaries{get;set;} = new List<VisitSummary>();
 
 }
 

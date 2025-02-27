@@ -5,6 +5,9 @@ public interface IAdminDashboardService
     public Task<int?> Revenue();
     public Task<int?> TotalProductQuantity();
     public Task<int?> VisitCount();
+    public Task<List<Order>> GetAllOrder();
+
+    public Task<List<VisitSummary>> VisitSummaryGet(int lastDay,DateTime tarih);
 }
 
 public class AdminDashboardService : IAdminDashboardService
@@ -48,6 +51,20 @@ public class AdminDashboardService : IAdminDashboardService
     {
         int? response = await _AdmincontextRepository.VisitCount();
         
+        return response;
+    }
+
+    public async Task<List<Order>> GetAllOrder()
+    {
+        List<Order> response = await _AdmincontextRepository.GetAllOrder();
+
+        return response;
+    }
+
+    public async Task<List<VisitSummary>> VisitSummaryGet(int lastDay, DateTime tarih)
+    {
+        List<VisitSummary> response = await _AdmincontextRepository.VisitSummaryGet(lastDay,tarih);
+
         return response;
     }
 }

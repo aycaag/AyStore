@@ -12,7 +12,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Ela Admin - HTML5 Admin Template</title>
+    <title>Admin - HTML5 Admin Template</title>
     <meta name="description" content="Ela Admin - HTML5 Admin Template">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -27,6 +27,7 @@
         href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css">
 
+    <script src="~/js/adminMain.js"></script>
     <link rel="stylesheet" href="~/css/admin-cs-skin-elastic.css">
     <link rel="stylesheet" href="~/css/admin.css" />
 
@@ -85,6 +86,7 @@
 
     @Html.Partial("_AdminLeftPanelPartial")
 
+
     <!-- Right Panel -->
     <div id="right-panel" class="right-panel">
         @Html.Partial("_AdminHeaderPartial")
@@ -132,11 +134,11 @@
     <script src="https://cdn.jsdelivr.net/npm/flot-spline@0.0.1/js/jquery.flot.spline.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/simpleweather@3.1.0/jquery.simpleWeather.min.js"></script>
-    <script src="assets/js/init/weather-init.js"></script>
+    @* <script src="assets/js/init/weather-init.js"></script> *@
 
     <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
-    <script src="assets/js/init/fullcalendar-init.js"></script>
+    @* <script src="~/adminFullcalendar-init.js"></script> *@
 
     <!--Local Stuff-->
     <script>
@@ -231,27 +233,28 @@
                 });
             // Line Chart  #flotLine5 End
             // Traffic Chart using chartist
+            // Grafiği oluştur
             if ($('#traffic-chart').length) {
                 var chart = new Chartist.Line('#traffic-chart', {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    series: [
-                        [0, 18000, 35000, 25000, 22000, 0],
-                        [0, 33000, 15000, 20000, 15000, 300],
-                        [0, 15000, 28000, 15000, 30000, 5000]
-                    ]
-                }, {
-                    low: 0,
-                    showArea: true,
-                    showLine: false,
-                    showPoint: false,
-                    fullWidth: true,
-                    axisX: {
-                        showGrid: true
-                    }
-                });
+                  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                  series: [
+                  [0, 18000, 35000,  25000,  22000,  0],
+                  [0, 33000, 15000,  20000,  15000,  300],
+                  [0, 15000, 28000,  15000,  30000,  5000]
+                  ]
+              }, {
+                  low: 0,
+                  showArea: true,
+                  showLine: false,
+                  showPoint: false,
+                  fullWidth: true,
+                  axisX: {
+                    showGrid: true
+                }
+            });
 
-                chart.on('draw', function (data) {
-                    if (data.type === 'line' || data.type === 'area') {
+                chart.on('draw', function(data) {
+                    if(data.type === 'line' || data.type === 'area') {
                         data.element.animate({
                             d: {
                                 begin: 2000 * data.index,
@@ -264,6 +267,8 @@
                     }
                 });
             }
+
+
             // Traffic Chart using chartist End
             //Traffic chart chart-js
             if ($('#TrafficChart').length) {

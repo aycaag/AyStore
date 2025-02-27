@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 public interface IAdminContextRepository
 {
 
@@ -7,6 +9,10 @@ public interface IAdminContextRepository
     public Task<int?> TotalProductQuantity ();
 
     public Task<int?> VisitCount();
+
+    public Task<List<VisitSummary>> VisitSummaryGet(int lastDay,DateTime tarih);
+
+    public Task<List<Order>> GetAllOrder();
 
 }
 
@@ -63,5 +69,42 @@ public class AdminContextRepository : IAdminContextRepository
         visitCount = visitCount==null?0:visitCount;
         return visitCount;
         
+    }
+
+    public async Task<List<VisitSummary>> VisitSummaryGet(int lastDay,DateTime tarih)
+    {
+        DateTime startDate = tarih.AddDays(-lastDay);
+        
+        List<VisitSummary> visitDTO = new List<VisitSummary>(); 
+        
+        var visitList = await _ayStoreContext.Visits
+                                .Where(s=>s.Tarih > startDate)
+                                .GroupBy(s=>s.Tarih.Date)
+                                .Select(s=> new{
+                                    Date = s.Key,
+                                    VisitCount = s.Count()
+
+                                 })
+                                .ToListAsync();
+        
+        foreach (var item in visitList)
+        {
+            visitDTO.Add(new VisitSummary
+            {
+                Date = item.Date,
+                VisitCount = item.VisitCount
+            });
+        }
+
+        return visitDTO;
+                            
+
+    }
+
+    public async Task<List<Order>> GetAllOrder()
+    {
+        List<Order> orderList =  await _ayStoreContext.Order.OrderDescending().ToListAsync();
+
+        return orderList;
     }
 }
