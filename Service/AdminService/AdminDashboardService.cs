@@ -2,7 +2,7 @@ public interface IAdminDashboardService
 {
     public Task<int?> UserCount();
     public Task<int?> SalesCount();
-    public Task<int?> Revenue();
+    public Task<decimal?> Revenue();
     public Task<int?> TotalProductQuantity();
     public Task<int?> VisitCount();
     public Task<List<Order>> GetAllOrder();
@@ -33,9 +33,9 @@ public class AdminDashboardService : IAdminDashboardService
         return response;
         
     }
-    public async Task<int?> Revenue()
+    public async Task<decimal?> Revenue()
     {
-        int? response = await _AdmincontextRepository.Revenue();
+        decimal? response = await _AdmincontextRepository.Revenue();
         
         return response;
     }

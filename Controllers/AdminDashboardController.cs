@@ -22,7 +22,7 @@ public AdminDashboardController(IAdminDashboardService adminDashboardService)
         // User Sayısını bulalım
         int? userCount = await _adminDashboardService.UserCount();
         int? salesCount = await _adminDashboardService.SalesCount();
-        int? revenue = await _adminDashboardService.Revenue();
+        decimal? revenue = await _adminDashboardService.Revenue();
         int? totalProductQuantity = await _adminDashboardService.TotalProductQuantity();
         int? visitCount = await _adminDashboardService.VisitCount();
 

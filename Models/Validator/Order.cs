@@ -5,7 +5,7 @@ public class Order
     public string OrderNo { get; set; }
     public DateTime OrderDate { get; set; } 
     public string ProductName { get; set; }
-    public int Price { get; set; }
+    public decimal? Price { get; set; }
     public int Quantity { get; set; }
-    public int TotalPrice { get; set; } 
+    public decimal? TotalPrice { get; set; } 
 }

@@ -35,12 +35,12 @@ jQuery(document).ready(function($) {
 	// Counter Number
 	$('.count').each(function () {
 		$(this).prop('Counter',0).animate({
-			Counter: $(this).text()
+			Counter: parseFloat($(this).text())
 		}, {
 			duration: 3000,
 			easing: 'swing',
 			step: function (now) {
-				$(this).text(Math.ceil(now));
+				$(this).text(now.toFixed(2));
 			}
 		});
 	});
